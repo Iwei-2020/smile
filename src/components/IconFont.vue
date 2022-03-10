@@ -1,8 +1,6 @@
 <template>
   <div class="icons-list">
-    <icon-font type="icon-smile" />
-    <icon-font type="icon-facebook" />
-    <icon-font type="icon-twitter" />
+    <icon-font type="icon-smile" class="logo" />
   </div>
 </template>
 <script>
@@ -17,8 +15,14 @@ export default {
   },
 };
 </script>
-<style scoped>
-.icons-list :deep(.anticon) {
-  font-size: 24px;
+<style scoped lang="less">
+.icons-list {
+  display: inline-block;
+  :deep(.anticon) {
+    font-size: 24px;
+  }
+  .logo {
+    font-size: 40px;
+  }
 }
 </style>

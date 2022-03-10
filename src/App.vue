@@ -1,15 +1,14 @@
 <template>
-  <router-view />
+  <div>
+    <router-view />
+  </div>
 </template>
 
 <script></script>
 
 <style lang="less">
-.icon {
-  width: 1em;
-  height: 1em;
-  vertical-align: -0.15em;
-  fill: currentColor;
-  overflow: hidden;
+#app {
+  font-family: SF Pro SC, SF Pro Display, SF Pro Icons, PingFang SC,
+    Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 </style>
