@@ -1,23 +1,22 @@
 <template>
   <div class="top-bar">
     <a-menu
-      class="flex-layout"
+      class="flex-menu"
       v-model:selectedKeys="current"
       mode="horizontal"
       theme="light"
     >
-      <a-menu-item key="mail" class="flex-child">
+      <a-menu-item key="mail" @click="goHome">
         <template #icon>
-          <icon-font type="icon-smile" class="logo"></icon-font>
+          <icon-font iconName="icon-smile"></icon-font>
         </template>
         <p class="topic">Smile</p>
       </a-menu-item>
-      <a-menu-item key="app" disabled class="flex-child">
-        <p class="topic">Navigation Two</p>
-      </a-menu-item>
-      <a-sub-menu key="sub1" class="flex-child">
+      <a-sub-menu key="sub1">
         <template #title>
-          <p class="topic">Navigation Three - Submenu</p>
+          <p class="topic">
+            <router-link to="/source">素材库</router-link>
+          </p>
         </template>
         <a-menu-item-group title="Item 1">
           <a-menu-item key="setting:1">Option 1</a-menu-item>
@@ -28,10 +27,26 @@
           <a-menu-item key="setting:4">Option 4</a-menu-item>
         </a-menu-item-group>
       </a-sub-menu>
-      <a-menu-item key="alipay" class="flex-child">
-        <div class="topic">
-          <a-button type="text">注册</a-button> |
-          <a-button type="text">登录</a-button>
+      <a-menu-item key="alipay" class="topic4">
+        <div class="topic btn-area" v-if="true">
+          <a-button
+            type="text"
+            @click="this.$emit('changeLoginModalVisible', true)"
+            >登录</a-button
+          >
+        </div>
+        <div class="btn-area" v-else>
+          <a-popover
+            :getPopupContainer="(triggerNode) => triggerNode.parentNode"
+          >
+            <template #content>
+              <div>
+                <router-link to="/user-home">个人主页</router-link>
+                <a-button type="text">退出登录</a-button>
+              </div>
+            </template>
+            <a-avatar :src="state.avatar" :size="54"></a-avatar>
+          </a-popover>
         </div>
       </a-menu-item>
     </a-menu>
@@ -40,16 +55,27 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import { AppstoreOutlined, SettingOutlined } from "@ant-design/icons-vue";
-import IconFont from "./IconFont.vue";
+import { useRouter } from "vue-router";
+
+import IconFont from "../../common/IconFont.vue";
+import avatar from "@/assets/images/avatar/a1.png";
 
 export default defineComponent({
   name: "TopBar",
   components: {
     IconFont,
   },
+  emits: ["changeLoginModalVisible"],
   setup() {
-    const state = reactive({});
+    const state = reactive({
+      avatar,
+    });
+    const router = useRouter();
+    const goHome = () => {
+      console.log("xx");
+      router.push({ path: "/" });
+    };
+    return { state, goHome };
   },
 });
 </script>
@@ -59,11 +85,10 @@ export default defineComponent({
   :deep(.ant-menu-horizontal) {
     border: none;
   }
-  width: 100%;
-  .flex-layout {
+  .flex-menu {
     display: flex;
     align-items: center;
-    height: 100px;
+    height: 200px;
     :deep(.ant-menu-item),
     :deep(.ant-menu-submenu) {
       flex: 1;
@@ -92,6 +117,15 @@ export default defineComponent({
       vertical-align: middle;
       font-weight: bold;
       font-size: 20px;
+    }
+    .btn-area {
+      height: 60px;
+    }
+    :deep(.ant-popover-inner) {
+      background-color: pink;
+    }
+    :deep(.anticon) {
+      font-size: 36px;
     }
   }
 }

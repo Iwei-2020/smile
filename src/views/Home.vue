@@ -1,32 +1,42 @@
 <template>
   <div class="home">
-    <top-bar class="top-bar"></top-bar>
-    <a-row>
-      <a-col :span="12" class="home-carousel">
-        <home-carousel></home-carousel>
-      </a-col>
-      <a-col :span="12" class="home-introduction">
-        <home-introduction></home-introduction>
-      </a-col>
-    </a-row>
-    <login-modal></login-modal>
+    <top-bar
+      class="top-bar"
+      @changeLoginModalVisible="changeLoginModalVisible"
+    ></top-bar>
+    <router-view />
+    <login-modal
+      :isVisible="state.LoginModalVisible"
+      @changeLoginModalVisible="changeLoginModalVisible"
+      @changeModalMode="changeModalMode"
+      :mode="state.mode"
+    ></login-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import TopBar from "@/components/TopBar.vue";
-import HomeCarousel from "@/components/HomeCarousel.vue";
-import HomeIntroduction from "@/components/HomeIntroduction.vue";
-import LoginModal from "@/components/LoginModal.vue";
+import { defineComponent, reactive } from "vue";
+import TopBar from "@/components/home/commonHome/TopBar.vue";
+import LoginModal from "@/components/home/commonHome/LoginModal.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
     TopBar,
-    HomeCarousel,
-    HomeIntroduction,
     LoginModal,
+  },
+  setup() {
+    const state = reactive({
+      LoginModalVisible: false,
+      mode: "login",
+    });
+    const changeLoginModalVisible = (visible: boolean) => {
+      state.LoginModalVisible = visible;
+    };
+    const changeModalMode = (mode: string) => {
+      state.mode = mode;
+    };
+    return { state, changeLoginModalVisible, changeModalMode };
   },
 });
 </script>
@@ -35,12 +45,6 @@ export default defineComponent({
 .home {
   .top-bar {
     width: 100%;
-    height: 200px;
-  }
-  .home-introduction {
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>
