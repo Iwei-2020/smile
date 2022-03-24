@@ -31,8 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted } from "vue";
-import a2 from "@/assets/images/avatar/a2.png";
+import { defineComponent, reactive, onMounted } from "vue";
 import * as echarts from "echarts";
 
 export default defineComponent({
@@ -66,9 +65,7 @@ export default defineComponent({
         myChart.resize();
       };
     });
-    const state = reactive({
-      a2,
-    });
+    const state = reactive({});
     return { state };
   },
 });

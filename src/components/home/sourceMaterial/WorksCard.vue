@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import avatar from "@/assets/images/avatar/a1.png";
 
 export default defineComponent({
   name: "WorksCard",
@@ -37,7 +36,6 @@ export default defineComponent({
   components: {},
   setup() {
     const state = reactive({
-      avatar,
       cardList: ["", "", ""],
       workList: ["", "", ""],
       imageSize: 64,

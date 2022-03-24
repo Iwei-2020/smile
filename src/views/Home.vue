@@ -17,7 +17,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import TopBar from "@/components/home/commonHome/TopBar.vue";
-import LoginModal from "@/components/home/commonHome/LoginModal.vue";
+import LoginModal from "@/components/home/LoginModal.vue";
 
 export default defineComponent({
   name: "Home",
@@ -32,6 +32,9 @@ export default defineComponent({
     });
     const changeLoginModalVisible = (visible: boolean) => {
       state.LoginModalVisible = visible;
+      if (visible) {
+        changeModalMode("login");
+      }
     };
     const changeModalMode = (mode: string) => {
       state.mode = mode;

@@ -17,7 +17,7 @@
           </a-menu-item>
         </a-menu>
       </a-col>
-      <a-col :span="8">
+      <a-col :span="12">
         <a-card title="我的信息">
           <router-view />
         </a-card>
@@ -56,6 +56,8 @@ export default defineComponent({
 
 <style scoped lang="less">
 .user-home {
+  width: 80%;
+  margin: 0 auto;
   .home-side-bar {
     display: flex;
     flex-direction: row-reverse;

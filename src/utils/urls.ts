@@ -1,9 +1,11 @@
 // url的链接
 export const urls: any = {
-  login: "login",
-  logout: "logout",
-  register: "register",
-  getUser: "getUser",
+  login: "user/login",
+  register: "user/register",
+  update: "user/update",
+  getUser: "user/get",
+  logout: "user/logout",
+  getDefaultAvatar: "user/getDefaultAvatar",
 
   addComment: "addComment",
   addThirdComment: "addThirdComment",
@@ -27,7 +29,7 @@ export const urls: any = {
   getTimeAxisDetail: "getTimeAxisDetail",
 
   getProjectList: "getProjectList",
-  getProjectDetail: "getProjectDetail"
+  getProjectDetail: "getProjectDetail",
 };
 
 export default urls;

@@ -1,5 +1,6 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { message } from "ant-design-vue";
+import router from "@/router";
 
 export interface ResponseData {
   code: number;
@@ -16,6 +17,10 @@ const service: AxiosInstance = axios.create({
 // request 拦截器 axios 的一些配置
 service.interceptors.request.use(
   (config: AxiosRequestConfig) => {
+    const token = localStorage.getItem("token");
+    if (token && config.headers) {
+      config.headers.Authorization = token;
+    }
     return config;
   },
   (error: any) => {
@@ -29,11 +34,15 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (res: AxiosResponse) => {
     // Some example codes here:
-    // code == 0: success
+    // code == 200: success
     if (res.status === 200) {
       const data: ResponseData = res.data;
-      if (data.code === 0) {
+      if (data.code === 200) {
         return data.data;
+      } else if (data.code === 401) {
+        console.log(43);
+        router.push({ path: "/" });
+        message.info("请先登录！");
       } else {
         message.error(data.message);
       }

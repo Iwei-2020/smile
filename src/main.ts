@@ -3,8 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Antd from "ant-design-vue";
-import "ant-design-vue/dist/antd.less";
-import "@/assets/iconfont/iconfont";
+import "@/less/theme.less";
+import "@/utils/iconfont";
 import service from "./utils/https";
 
 const app = createApp(App);
