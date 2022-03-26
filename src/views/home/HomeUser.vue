@@ -1,7 +1,7 @@
 <template>
   <div class="home-user">
     <div>
-      <svg-icon name="user"></svg-icon>
+      <svg-icon iconClass="top"></svg-icon>
     </div>
     <div class="main">
       <a-menu

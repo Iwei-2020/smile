@@ -1,8 +1,3 @@
-const path = require("path");
-
-function resolve(dir) {
-  return path.join(__dirname, ".", dir);
-}
 module.exports = {
   publicPath: "/",
   devServer: {
@@ -28,20 +23,16 @@ module.exports = {
     },
   },
   chainWebpack: (config) => {
-    config.module
-      .rule("svg")
-      .exclude.add(resolve("src/assets/icons")) // 存放 svg 目录的目录
-      .end();
-    config.module
-      .rule("icons")
+    const svgRule = config.module.rule("svg");
+    // 清空默认svg规则
+    svgRule.uses.clear();
+    //针对svg文件添加svg-sprite-loader规则
+    svgRule
       .test(/\.svg$/)
-      .include.add(resolve("src/assets/icons")) // 存放 svg 目录的目录
-      .end()
       .use("svg-sprite-loader")
       .loader("svg-sprite-loader")
       .options({
         symbolId: "icon-[name]",
-      })
-      .end();
+      });
   },
 };
