@@ -5,6 +5,7 @@ export const urls: any = {
   update: "user/update",
   getUser: "user/get",
   logout: "user/logout",
+  changeAvatar: "user/avatar",
   getDefaultAvatar: "user/getDefaultAvatar",
 
   addComment: "addComment",

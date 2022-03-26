@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive } from "vue";
 import { CheckOutlined } from "@ant-design/icons-vue";
 
 export default defineComponent({

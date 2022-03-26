@@ -2,46 +2,46 @@ import { message } from "ant-design-vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import Dashboard from "@/views/DashBoard.vue";
-import UserHome from "@/views/home/UserHome.vue";
-import SourceMaterial from "@/views/home/SourceMaterial.vue";
-import CommonHome from "@/views/home/CommonHome.vue";
-import MyInformation from "@/views/home/userHome/MyInformation.vue";
-import MyAvatar from "@/views/home/userHome/MyAvatar.vue";
-import MySecurity from "@/views/home/userHome/MySecurity.vue";
+import UserHome from "@/views/home/HomeUser.vue";
+import SourceMaterial from "@/views/home/SourceLibrary.vue";
+import CommonHome from "@/views/home/HomeMain.vue";
+import MyInformation from "@/views/home/user/MyInformation.vue";
+import MyAvatar from "@/views/home/user/MyAvatar.vue";
+import MySecurity from "@/views/home/user/MySecurity.vue";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
+    path: "",
     component: () => Home,
     children: [
       {
-        path: "/",
+        path: "",
         component: () => CommonHome,
       },
       {
-        path: "user-home",
+        path: "/user",
         component: () => UserHome,
         children: [
           {
-            path: "my-information",
+            path: "info",
             component: () => MyInformation,
-            meta: { requiresAuth: true },
+            meta: { requiresAuth: true, current: "info" },
           },
           {
-            path: "my-avatar",
+            path: "avatar",
             component: () => MyAvatar,
-            meta: { requiresAuth: true },
+            meta: { requiresAuth: true, current: "avatar" },
           },
           {
-            path: "my-security",
+            path: "security",
             component: () => MySecurity,
-            meta: { requiresAuth: true },
+            meta: { requiresAuth: true, current: "security" },
           },
         ],
       },
       {
-        path: "/source",
+        path: "source",
         component: () => SourceMaterial,
       },
     ],
@@ -56,18 +56,19 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // 而不是去检查每条路由记录
   // to.matched.some(record => record.meta.requiresAuth)
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    await store.dispatch("getUser");
+  }
   if (to.meta.requiresAuth) {
     // 此路由需要授权，请检查是否已登录
     // 如果没有，则重定向到登录页面
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (store.state.user.id) {
       next();
-      if (!store.state.user.id) {
-        store.dispatch("getUser");
-      }
       return;
     }
     message.error("还未登录，请先登录!");

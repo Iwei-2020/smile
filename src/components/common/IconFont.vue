@@ -1,13 +1,13 @@
 <template>
-  <div class="icons-list">
-    <icon-font :type="iconName" class="logo" />
+  <div class="icon">
+    <icon-font :type="iconName" />
   </div>
 </template>
 <script>
 import { createFromIconfontCN } from "@ant-design/icons-vue";
 import { defineComponent } from "vue";
 const IconFont = createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_3234326_wq29g6m5in.js",
+  scriptUrl: "//at.alicdn.com/t/font_3234326_e5buikug20a.js",
 });
 export default defineComponent({
   name: "SourceMaterial",
@@ -21,7 +21,7 @@ export default defineComponent({
 });
 </script>
 <style scoped lang="less">
-.icons-list {
+.icon {
   display: inline-block;
 }
 </style>

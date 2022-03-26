@@ -23,10 +23,10 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
 import IconFont from "@/components/common/IconFont.vue";
-import WorksCard from "@/components/home/sourceMaterial/WorksCard.vue";
+import WorksCard from "@/components/home/source/WorksCard.vue";
 
 export default defineComponent({
-  name: "SourceMaterial",
+  name: "SourceLibrary",
   props: {},
   components: { IconFont, WorksCard },
   setup() {

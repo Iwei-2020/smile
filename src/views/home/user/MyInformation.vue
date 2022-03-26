@@ -3,8 +3,8 @@
     class="my-information"
     :labelCol="{ span: 6 }"
     labelAlign="left"
-    :model="state.user"
     @finish="updateUser"
+    :model="this.$store.getters.getUser"
   >
     <a-form-item label="昵称">
       <a-input
@@ -51,7 +51,8 @@
 import { User } from "@/interface/interface";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
-import { defineComponent, onMounted, reactive, toRaw } from "vue";
+import { message } from "ant-design-vue";
+import { defineComponent } from "vue";
 import { useStore } from "vuex";
 
 export default defineComponent({
@@ -60,25 +61,19 @@ export default defineComponent({
   components: {},
   setup() {
     let store = useStore();
-    const state = reactive({
-      current: ["my-information"],
-    });
     const updateUser = async (): Promise<void> => {
       let user: User;
       user = await service.post(urls.update, store.state.user);
       if (user) {
         store.commit("userLogin", user);
+        message.success("保存成功");
       }
     };
     const handleInputChange = (type: string, value: string) => {
       store.commit("userChange", { type: type, value: value });
     };
     const formProp = ["username", "gender", "birthday", "signature"];
-    const userInit = () => {
-      store.commit("userInit");
-    };
-    onMounted(userInit);
-    return { state, updateUser, handleInputChange, formProp };
+    return { updateUser, handleInputChange, formProp };
   },
 });
 </script>

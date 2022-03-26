@@ -14,7 +14,7 @@
           shape="circle"
           style="width: 64px; height: 64px"
         >
-          更换头像
+          选择头像
         </a-button>
       </a-upload>
       <a-avatar
@@ -25,16 +25,30 @@
         添加挂件
       </a-button>
     </div>
-    <div v-for="(_, i) in times(4, noop)" :key="i" class="default-avatar-area">
-      <a-row class="default-avatar-row">
-        <a-col
-          :span="6"
-          v-for="(url, j) in state.defaultAvatarList.slice(i * 4, (i + 1) * 4)"
-          :key="j"
-        >
-          <a-avatar :src="url" :size="64"></a-avatar>
-        </a-col>
-      </a-row>
+    <div class="title">
+      <span>默认头像</span>
+    </div>
+    <div v-if="state.defaultAvatarList">
+      <div
+        class="default-avatar-area"
+        v-for="(_, i) in times(4, noop)"
+        :key="i"
+      >
+        <a-row class="default-avatar-row">
+          <a-col
+            v-for="(url, j) in state.defaultAvatarList.slice(
+              i * 4,
+              (i + 1) * 4
+            )"
+            :span="6"
+            :key="j"
+          >
+            <div class="avatar-div" @click="() => changeAvatar(url)">
+              <a-avatar :src="url" :size="64"> </a-avatar>
+            </div>
+          </a-col>
+        </a-row>
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +56,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from "vue";
 import { message } from "ant-design-vue";
-import { FileInfo, FileItem } from "@/interface/interface";
+import { FileInfo, FileItem, User } from "@/interface/interface";
 import { useStore } from "vuex";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
@@ -63,7 +77,7 @@ export default defineComponent({
     const state = reactive({
       loading: false,
       imageUrl: "",
-      defaultAvatarList: "",
+      defaultAvatarList: [],
     });
     const beforeUpload = (file: FileItem) => {
       const isJpgOrPng =
@@ -100,6 +114,19 @@ export default defineComponent({
     let { id } = store.state.user;
     const uploadUrl = `http://localhost:3001/api/upload/avatar/${id}`;
     onMounted(getDefaultAvatar);
+    const changeAvatar = async (url: string): Promise<void> => {
+      console.log("118", url);
+
+      let user: User;
+      let formData = new FormData();
+      formData.append("url", url);
+      formData.append("id", store.state.user.id);
+      user = await service.post(urls.changeAvatar, formData);
+      if (user) {
+        store.commit("userLogin", user);
+        message.success("头像修改成功");
+      }
+    };
     return {
       state,
       beforeUpload,
@@ -107,6 +134,7 @@ export default defineComponent({
       uploadUrl,
       noop,
       times,
+      changeAvatar,
     };
   },
 });
@@ -115,15 +143,32 @@ export default defineComponent({
 <style scoped lang="less">
 .my-avatar {
   .flex {
+    margin: 0 auto;
+    width: 50%;
     display: flex;
     justify-content: space-around;
   }
   .default-avatar-area {
     margin-top: 40px;
     .default-avatar-row {
-      text-align: center;
       margin: 20px 0 20px 0;
     }
+  }
+  .avatar-div {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    border-radius: 50%;
+    &:hover {
+      background: rgba(101, 101, 101, 0.6);
+      cursor: pointer;
+    }
+  }
+  .title {
+    margin-top: 40px;
+    text-align: center;
+    font-weight: bolder;
+    font-size: 16px;
   }
 }
 </style>

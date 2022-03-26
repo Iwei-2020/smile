@@ -11,19 +11,26 @@
       @changeModalMode="changeModalMode"
       :mode="state.mode"
     ></login-modal>
+    <module-title :iconName="`icon-hot`" title="本周热门"></module-title>
+    <module-title :iconName="`icon-xihuan`" title="点赞最多"></module-title>
+    <image-card></image-card>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import TopBar from "@/components/home/commonHome/TopBar.vue";
+import TopBar from "@/components/home/TopBar.vue";
 import LoginModal from "@/components/home/LoginModal.vue";
+import ModuleTitle from "@/components/home/main/ModuleTitle.vue";
+import ImageCard from "@/components/home/main/WorkCard.vue";
 
 export default defineComponent({
   name: "Home",
   components: {
     TopBar,
     LoginModal,
+    ModuleTitle,
+    ImageCard,
   },
   setup() {
     const state = reactive({
@@ -46,8 +53,5 @@ export default defineComponent({
 
 <style scoped lang="less">
 .home {
-  .top-bar {
-    width: 100%;
-  }
 }
 </style>

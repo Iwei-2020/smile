@@ -1,3 +1,8 @@
+const path = require("path");
+
+function resolve(dir) {
+  return path.join(__dirname, ".", dir);
+}
 module.exports = {
   publicPath: "/",
   devServer: {
@@ -17,14 +22,26 @@ module.exports = {
     loaderOptions: {
       less: {
         lessOptions: {
-          // modifyVars: {
-          //   "primary-color": "#1DA57A",
-          //   "link-color": "#1DA57A",
-          //   "border-radius-base": "2px",
-          // },
           javascriptEnabled: true,
         },
       },
     },
+  },
+  chainWebpack: (config) => {
+    config.module
+      .rule("svg")
+      .exclude.add(resolve("src/assets/icons")) // 存放 svg 目录的目录
+      .end();
+    config.module
+      .rule("icons")
+      .test(/\.svg$/)
+      .include.add(resolve("src/assets/icons")) // 存放 svg 目录的目录
+      .end()
+      .use("svg-sprite-loader")
+      .loader("svg-sprite-loader")
+      .options({
+        symbolId: "icon-[name]",
+      })
+      .end();
   },
 };

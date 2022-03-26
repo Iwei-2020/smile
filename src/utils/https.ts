@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { message } from "ant-design-vue";
 import router from "@/router";
+import store from "@/store";
 
 export interface ResponseData {
   code: number;
@@ -40,8 +41,8 @@ service.interceptors.response.use(
       if (data.code === 200) {
         return data.data;
       } else if (data.code === 401) {
-        console.log(43);
         router.push({ path: "/" });
+        store.commit("userLogout");
         message.info("请先登录！");
       } else {
         message.error(data.message);

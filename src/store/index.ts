@@ -59,10 +59,11 @@ export default createStore({
   },
   actions: {
     getUser: async (context): Promise<void> => {
-      const user = await service.get(urls.getUser);
+      const data: any = await service.get(urls.getUser);
       const { commit } = context;
+      const { user, token } = data;
       commit("userLogin", user);
-      console.log(user);
+      commit("setToken", token);
     },
   },
   modules: {},

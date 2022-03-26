@@ -36,6 +36,7 @@
     "less": "^3.0.4",
     "less-loader": "^6.2.0",
     "prettier": "^2.2.1",
+    "svg-sprite-loader": "^6.0.11",
     "typescript": "~4.1.5"
   }
 }

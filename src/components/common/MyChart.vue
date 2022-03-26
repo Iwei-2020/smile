@@ -3,13 +3,11 @@
 </template>
 
 <script lang="ts">
-import { number } from "echarts";
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "",
-  props: {
-  },
+  props: {},
   components: {},
 });
 </script>
