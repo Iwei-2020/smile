@@ -56,7 +56,9 @@
                 </router-link>
               </div>
               <div class="pointer m-bottom10">
-                <span @click="logout">作品中心</span>
+                <router-link to="/work">
+                  <span>作品中心</span>
+                </router-link>
               </div>
               <div class="pointer">
                 <span @click="logout">退出</span>

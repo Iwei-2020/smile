@@ -2,7 +2,8 @@ import { message } from "ant-design-vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "@/views/Home.vue";
 import Dashboard from "@/views/DashBoard.vue";
-import UserHome from "@/views/home/HomeUser.vue";
+import HomeUser from "@/views/home/HomeUser.vue";
+import HomeWork from "@/views/home/HomeWork.vue";
 import SourceMaterial from "@/views/home/SourceLibrary.vue";
 import CommonHome from "@/views/home/HomeMain.vue";
 import MyInformation from "@/views/home/user/MyInformation.vue";
@@ -21,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "/user",
-        component: () => UserHome,
+        component: () => HomeUser,
         children: [
           {
             path: "info",
@@ -43,6 +44,10 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "source",
         component: () => SourceMaterial,
+      },
+      {
+        path: "work",
+        component: () => HomeWork,
       },
     ],
   },

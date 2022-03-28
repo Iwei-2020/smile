@@ -1,7 +1,9 @@
 <template>
   <div class="home-user">
-    <div>
-      <svg-icon iconClass="top"></svg-icon>
+    <div class="img-top">
+      <svg-icon iconClass="top2" class="icon"></svg-icon>
+      <div class="top-title">Hi!即刻定义你自己</div>
+      <svg-icon iconClass="top1" class="icon"></svg-icon>
     </div>
     <div class="main">
       <a-menu
@@ -97,12 +99,33 @@ export default defineComponent({
 
 <style scoped lang="less">
 .home-user {
-  padding: 0 10vw;
-  margin-top: 40px;
-  box-sizing: border-box;
+  .img-top {
+    padding: 0 10vw;
+    height: 200px;
+    background-image: linear-gradient(
+      to right,
+      #f78ca0 0%,
+      #f9748f 19%,
+      #fd868c 60%,
+      #fe9a8b 100%
+    );
+    display: flex;
+    justify-content: space-between;
+    .top-title {
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 200px;
+      color: rgb(255, 255, 255);
+    }
+    .icon {
+      height: 200px;
+      width: 200px;
+    }
+  }
   .main {
     display: flex;
     justify-content: center;
+    margin-top: 40px;
     .sider-bar {
       background-color: rgb(246, 249, 250);
       font-weight: 800;
