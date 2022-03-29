@@ -4,7 +4,7 @@ import Home from "@/views/Home.vue";
 import Dashboard from "@/views/DashBoard.vue";
 import HomeUser from "@/views/home/HomeUser.vue";
 import HomeWork from "@/views/home/HomeWork.vue";
-import SourceMaterial from "@/views/home/SourceLibrary.vue";
+import HomeSource from "@/views/home/HomeSource.vue";
 import CommonHome from "@/views/home/HomeMain.vue";
 import MyInformation from "@/views/home/user/MyInformation.vue";
 import MyAvatar from "@/views/home/user/MyAvatar.vue";
@@ -43,7 +43,7 @@ const routes: Array<RouteRecordRaw> = [
       },
       {
         path: "source",
-        component: () => SourceMaterial,
+        component: () => HomeSource,
       },
       {
         path: "work",

@@ -134,8 +134,8 @@ export default defineComponent({
         text-align: center;
         color: rgba(0, 0, 0, 0.6);
         .icon {
-          font-size: 20px;
-          height: @base;
+          width: 20px;
+          height: 100%;
         }
       }
       .vertical-divider {
