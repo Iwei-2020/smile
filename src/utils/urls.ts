@@ -8,7 +8,7 @@ export const urls: any = {
   changeAvatar: "user/avatar",
   getDefaultAvatar: "user/getDefaultAvatar",
 
-  addComment: "addComment",
+  addLibrary: "library/add",
   addThirdComment: "addThirdComment",
   getCommentList: "getCommentList",
 

@@ -11,6 +11,16 @@ export interface User {
   favoritesCount?: 0;
 }
 
+export interface Library {
+  lbId?: number;
+  lbName?: string;
+  lbType?: number;
+  lbDescription?: string;
+  lbLike?: number;
+  lbWatch?: number;
+  lbCreated?: string;
+}
+
 export interface FileItem {
   uid: string;
   name?: string;

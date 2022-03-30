@@ -57,66 +57,142 @@
             <svg-icon iconClass="reward" class="icon"></svg-icon>
           </div>
         </div>
-        <a-modal
-          :visible="state.addLibraryModalVisible"
-          title="添加库"
-          cancelText="取消"
-          okText="确定"
-          @cancel="closeModal"
-        >
-          <a-form
-            labelAlign="right"
-            :labelCol="{ span: 4 }"
-            :wrapperCol="{ span: 8 }"
-          >
-            <a-form-item label="库名">
-              <a-input></a-input>
-            </a-form-item>
-            <a-form-item label="库类型">
-              <a-select>
-                <a-select-option key="1" value="">图片库</a-select-option>
-                <a-select-option key="2" value="">Gif库</a-select-option>
-                <a-select-option key="3" value="">矢量库</a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="库描述" :wrapperCol="{ span: 20 }">
-              <a-textarea></a-textarea>
-            </a-form-item>
-          </a-form>
-        </a-modal>
       </div>
     </div>
-
     <div class="home-card-container">
       <div class="grid-wrapper">
         <source-card></source-card>
         <source-card></source-card>
       </div>
     </div>
+    <a-modal
+      :visible="state.addLibraryModalVisible"
+      title="添加库"
+      :footer="null"
+      @cancel="closeModal"
+    >
+      <a-form
+        labelAlign="right"
+        :labelCol="{ span: 4 }"
+        :wrapperCol="{ span: 8 }"
+        :model="state.library"
+        :rules="rules"
+        @finish="addLibrarySubmit"
+      >
+        <a-form-item label="库名" name="lbName">
+          <a-input v-model:value="state.library.lbName"></a-input>
+        </a-form-item>
+        <a-form-item label="库类型" name="lbType">
+          <a-select
+            v-model:value="state.library.lbType"
+            :options="selectOp"
+          ></a-select>
+        </a-form-item>
+        <a-form-item
+          label="库描述"
+          :wrapperCol="{ span: 20 }"
+          name="lbDescription"
+        >
+          <a-textarea v-model:value="state.library.lbDescription"></a-textarea>
+        </a-form-item>
+        <a-form-item :wrapperCol="{ span: 24 }" style="text-align: right">
+          <a-button type="primary" htmlType="submit" style="margin-right: 10px"
+            >提交</a-button
+          >
+          <a-button htmlType="submit" @click="closeModal">取消</a-button>
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
+import { SelectTypes } from "ant-design-vue/es/select";
 import wrapper from "@/assets/images/avatar-wrapper.png";
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import SourceCard from "@/components/home/work/SourceCard.vue";
+import service from "@/utils/https";
+import urls from "@/utils/urls";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "home-work",
   props: {},
   components: { SvgIcon, SourceCard },
   setup() {
+    const store = useStore();
     const state = reactive({
       addLibraryModalVisible: false,
+      library: {
+        lbName: "",
+        lbType: undefined,
+        lbDescription: "",
+      },
     });
+    const libraryInit = () => {
+      state.library = {
+        lbName: "",
+        lbType: undefined,
+        lbDescription: "",
+      };
+    };
     const closeModal = () => {
       state.addLibraryModalVisible = false;
     };
     const openModal = () => {
+      libraryInit();
       state.addLibraryModalVisible = true;
     };
-    return { state, wrapper, closeModal, openModal };
+    const addLibrarySubmit = async (): Promise<void> => {
+      let formData = new FormData();
+      formData.append("library", JSON.stringify(state.library));
+      formData.append("id", JSON.stringify(store.state.user.id));
+      let data: any = await service.post(urls.addLibrary, formData);
+      console.log(data);
+    };
+    const rules = {
+      lbName: [
+        { required: true, message: "请输入库名", trigger: "change" },
+        { max: 16, message: "库名不能超过16个字符", trigger: "change" },
+      ],
+      lbType: [
+        {
+          type: "number",
+          required: true,
+          message: "请选择库类型",
+          trigger: "change",
+        },
+      ],
+      lbDescription: [
+        { required: true, message: "请输入库描述", trigger: "change" },
+        { max: 64, message: "库名不能超过64个字符", trigger: "change" },
+      ],
+    };
+    const selectOp = ref<SelectTypes["options"]>([
+      {
+        label: "图片库",
+        value: 1,
+      },
+      {
+        label: "Gif库",
+        value: 2,
+      },
+      {
+        label: "矢量库",
+        value: 3,
+      },
+    ]);
+
+    return {
+      state,
+      wrapper,
+      closeModal,
+      openModal,
+      rules,
+      addLibrarySubmit,
+      selectOp,
+    };
   },
 });
 </script>
@@ -153,6 +229,7 @@ export default defineComponent({
       }
       .info-container {
         height: 130px;
+        width: 854px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -188,7 +265,6 @@ export default defineComponent({
         }
       }
       .ops-container {
-        margin: 0 auto;
         position: relative;
         top: 24px;
         display: flex;
@@ -217,7 +293,6 @@ export default defineComponent({
       }
     }
   }
-
   .home-card-container {
     width: @base-width;
     margin: 0 auto;
