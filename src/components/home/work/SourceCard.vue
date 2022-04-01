@@ -1,5 +1,5 @@
 <template>
-  <div class="work-card">
+  <div class="source-card" @click="this.$emit('goMyLibrary', 1)">
     <div class="wrapper">
       <div class="img-container">
         <svg-icon iconClass="duck1" class="icon"></svg-icon>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="title-container">
-      <svg-icon iconClass="namecard" class="icon-card"></svg-icon>
+      <svg-icon iconClass="name" class="icon-card"></svg-icon>
       <span class="title"> 鸭子表情包 </span>
       <span class="title-right">
         数量
@@ -45,6 +45,7 @@ import { HeartFilled, EyeFilled, StarFilled } from "@ant-design/icons-vue";
 export default defineComponent({
   props: {},
   components: { SvgIcon, HeartFilled, EyeFilled, StarFilled },
+  emits: ["goMyLibrary"],
   setup() {
     return { search };
   },
@@ -52,11 +53,17 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
-.work-card {
+.source-card {
+  cursor: pointer;
+  transition: box-shadow 0.4s, transform 0.4s;
   background-color: rgb(255, 255, 255);
   width: 330px;
   padding: 24px 15px 15px 15px;
   box-sizing: content-box;
+  &:hover {
+    transform: translateY(-2%);
+    box-shadow: 1px 1px 10px 2px #ccc;
+  }
   .wrapper {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
@@ -109,7 +116,7 @@ export default defineComponent({
       }
       .count {
         line-height: 24px;
-        margin-right: 10px;
+        margin: 0 10px 0 5px;
       }
       .pointer {
         cursor: pointer;

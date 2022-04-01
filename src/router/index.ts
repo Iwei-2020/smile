@@ -9,6 +9,8 @@ import CommonHome from "@/views/home/HomeMain.vue";
 import MyInformation from "@/views/home/user/MyInformation.vue";
 import MyAvatar from "@/views/home/user/MyAvatar.vue";
 import MySecurity from "@/views/home/user/MySecurity.vue";
+import MyLibrary from "@/views/home/work/MyLibrary.vue";
+import LibraryWork from "@/views/home/work/LibraryWork.vue";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
@@ -21,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => CommonHome,
       },
       {
-        path: "/user",
+        path: "user",
         component: () => HomeUser,
         children: [
           {
@@ -48,6 +50,19 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "work",
         component: () => HomeWork,
+        children: [
+          {
+            path: "",
+            component: () => MyLibrary,
+            meta: { requiresAuth: true },
+          },
+          {
+            path: "library/:id",
+            component: () => LibraryWork,
+            meta: { requiresAuth: true },
+            props: true,
+          },
+        ],
       },
     ],
   },

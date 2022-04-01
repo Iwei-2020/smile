@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="ops-container">
-          <div class="icon-container add">
+          <div class="icon-container add" v-if="state.isRouteWork">
             <svg-icon
               iconClass="add"
               class="icon"
@@ -59,12 +59,7 @@
         </div>
       </div>
     </div>
-    <div class="home-card-container">
-      <div class="grid-wrapper">
-        <source-card></source-card>
-        <source-card></source-card>
-      </div>
-    </div>
+    <router-view />
     <a-modal
       :visible="state.addLibraryModalVisible"
       title="添加库"
@@ -111,15 +106,15 @@ import { defineComponent, reactive, ref } from "vue";
 import { SelectTypes } from "ant-design-vue/es/select";
 import wrapper from "@/assets/images/avatar-wrapper.png";
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import SourceCard from "@/components/home/work/SourceCard.vue";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
 import { useStore } from "vuex";
+import { onBeforeRouteUpdate, RouteLocationNormalized } from "vue-router";
 
 export default defineComponent({
   name: "home-work",
   props: {},
-  components: { SvgIcon, SourceCard },
+  components: { SvgIcon },
   setup() {
     const store = useStore();
     const state = reactive({
@@ -129,6 +124,7 @@ export default defineComponent({
         lbType: undefined,
         lbDescription: "",
       },
+      isRouteWork: true,
     });
     const libraryInit = () => {
       state.library = {
@@ -184,6 +180,9 @@ export default defineComponent({
       },
     ]);
 
+    onBeforeRouteUpdate((to: RouteLocationNormalized) => {
+      state.isRouteWork = to.fullPath === "/work";
+    });
     return {
       state,
       wrapper,
@@ -291,17 +290,6 @@ export default defineComponent({
           cursor: pointer;
         }
       }
-    }
-  }
-  .home-card-container {
-    width: @base-width;
-    margin: 0 auto;
-    .grid-wrapper {
-      padding-top: 50px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(274px, 1fr));
-      margin-bottom: 20px;
-      grid-gap: 45px 40px;
     }
   }
 }
