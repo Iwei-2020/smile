@@ -18,6 +18,7 @@ export interface Library {
   lbDescription?: string;
   lbLike?: number;
   lbWatch?: number;
+  lbCount?: number;
   lbCreated?: string;
 }
 

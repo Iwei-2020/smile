@@ -6,8 +6,9 @@
           <a-avatar
             :src="wrapper"
             :size="130"
-            class="avatar-wrapper"
+            :class="{ 'avatar-wrapper': true, pointer: !state.isRouteWork }"
             shape="square"
+            @click="goWork"
           ></a-avatar>
           <a-avatar
             :src="this.$store.getters.getUser.avatarUrl"
@@ -109,13 +110,18 @@ import SvgIcon from "@/components/common/SvgIcon.vue";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
 import { useStore } from "vuex";
-import { onBeforeRouteUpdate, RouteLocationNormalized } from "vue-router";
+import {
+  onBeforeRouteUpdate,
+  RouteLocationNormalized,
+  useRouter,
+} from "vue-router";
 
 export default defineComponent({
   name: "home-work",
   props: {},
   components: { SvgIcon },
   setup() {
+    const router = useRouter();
     const store = useStore();
     const state = reactive({
       addLibraryModalVisible: false,
@@ -179,10 +185,14 @@ export default defineComponent({
         value: 3,
       },
     ]);
-
     onBeforeRouteUpdate((to: RouteLocationNormalized) => {
       state.isRouteWork = to.fullPath === "/work";
     });
+    const goWork = () => {
+      if (!state.isRouteWork) {
+        router.push("/work");
+      }
+    };
     return {
       state,
       wrapper,
@@ -191,6 +201,7 @@ export default defineComponent({
       rules,
       addLibrarySubmit,
       selectOp,
+      goWork,
     };
   },
 });
@@ -292,5 +303,8 @@ export default defineComponent({
       }
     }
   }
+}
+.pointer {
+  cursor: pointer;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="source-card" @click="this.$emit('goMyLibrary', 1)">
-    <div class="wrapper">
+  <div class="source-card">
+    <div class="wrapper" @click="this.$emit('goMyLibrary', 1)">
       <div class="img-container">
         <svg-icon iconClass="duck1" class="icon"></svg-icon>
       </div>
@@ -16,38 +16,58 @@
     </div>
     <div class="title-container">
       <svg-icon iconClass="name" class="icon-card"></svg-icon>
-      <span class="title"> 鸭子表情包 </span>
+      <span class="title"> {{ state.library.lbName }} </span>
       <span class="title-right">
         数量
-        <span class="count">30</span>
+        <span class="count">{{ state.library.lbCount }}</span>
       </span>
     </div>
     <div class="ops-container">
-      <a-avatar :size="24" class="avatar"></a-avatar>
-      <span class="author-name">passion</span>
-      <div class="ops-area">
+      <span v-if="false">
+        <a-avatar :size="24" class="avatar"></a-avatar>
+        <span class="author-name">passion</span>
+      </span>
+      <span class="ops-area">
         <EyeFilled />
-        <span class="count">100</span>
+        <span class="count mr10">{{ state.library.lbWatch }}</span>
         <HeartFilled class="pointer" />
-        <span class="count">100</span>
-        <StarFilled class="pointer" />
-      </div>
+        <span :class="{ count: true, mr10: false }">{{
+          state.library.lbLike
+        }}</span>
+        <StarFilled v-if="false" class="pointer" />
+      </span>
+    </div>
+    <div class="edit-container">
+      <EditFilled class="icon" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import search from "@/assets/images/search.png";
-import { HeartFilled, EyeFilled, StarFilled } from "@ant-design/icons-vue";
+import {
+  HeartFilled,
+  EyeFilled,
+  StarFilled,
+  EditFilled,
+} from "@ant-design/icons-vue";
 
 export default defineComponent({
-  props: {},
-  components: { SvgIcon, HeartFilled, EyeFilled, StarFilled },
+  props: {
+    library: {
+      type: Object,
+      required: true,
+    },
+  },
+  components: { SvgIcon, HeartFilled, EyeFilled, StarFilled, EditFilled },
   emits: ["goMyLibrary"],
-  setup() {
-    return { search };
+  setup(props) {
+    const state = reactive({
+      library: props.library,
+    });
+    return { search, state };
   },
 });
 </script>
@@ -60,9 +80,13 @@ export default defineComponent({
   width: 330px;
   padding: 24px 15px 15px 15px;
   box-sizing: content-box;
+  position: relative;
   &:hover {
     transform: translateY(-2%);
     box-shadow: 1px 1px 10px 2px #ccc;
+    .edit-container {
+      display: block;
+    }
   }
   .wrapper {
     display: grid;
@@ -116,10 +140,30 @@ export default defineComponent({
       }
       .count {
         line-height: 24px;
-        margin: 0 10px 0 5px;
+        margin-left: 5px;
+      }
+      .mr10 {
+        margin-right: 10px;
       }
       .pointer {
         cursor: pointer;
+      }
+    }
+  }
+
+  .edit-container {
+    z-index: 999;
+    width: 330px;
+    background: rgba(13, 10, 49, 0.9);
+    position: absolute;
+    height: 24px;
+    text-align: center;
+    display: none;
+    .icon {
+      line-height: 24px;
+      color: rgb(255, 255, 255);
+      &:hover {
+        color: red;
       }
     }
   }
