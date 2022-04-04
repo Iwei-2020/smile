@@ -1,7 +1,6 @@
 <template>
   <a-modal
     :visible="isVisible"
-    @ok="handleOk"
     @cancel="changeLoginModalVisible"
     :footer="null"
     class="login-modal"

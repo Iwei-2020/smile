@@ -3,7 +3,7 @@
     <div class="menu-container">
       <a-menu
         class="menu"
-        v-model:selectedKeys="current"
+        v-model:selectedKeys="state.current"
         mode="horizontal"
         theme="light"
       >
@@ -95,7 +95,9 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const state = reactive({});
+    const state = reactive({
+      current: [],
+    });
     const goHome = () => {
       router.push({ path: "/" });
     };

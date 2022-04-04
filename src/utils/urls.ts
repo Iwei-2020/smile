@@ -10,8 +10,7 @@ export const urls: any = {
 
   addLibrary: "library/add",
   getLibrary: "library/get",
-  addThirdComment: "addThirdComment",
-  getCommentList: "getCommentList",
+  updateLibrary: "library/update",
 
   getArticleList: "getArticleList",
   likeArticle: "likeArticle",

@@ -115,8 +115,6 @@ export default defineComponent({
     const uploadUrl = `http://localhost:3001/api/upload/avatar/${id}`;
     onMounted(getDefaultAvatar);
     const changeAvatar = async (url: string): Promise<void> => {
-      console.log("118", url);
-
       let user: User;
       let formData = new FormData();
       formData.append("url", url);

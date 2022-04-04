@@ -1,64 +1,53 @@
 import { message } from "ant-design-vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "@/views/Home.vue";
-import Dashboard from "@/views/DashBoard.vue";
-import HomeUser from "@/views/home/HomeUser.vue";
-import HomeWork from "@/views/home/HomeWork.vue";
-import HomeSource from "@/views/home/HomeSource.vue";
-import CommonHome from "@/views/home/HomeMain.vue";
-import MyInformation from "@/views/home/user/MyInformation.vue";
-import MyAvatar from "@/views/home/user/MyAvatar.vue";
-import MySecurity from "@/views/home/user/MySecurity.vue";
-import MyLibrary from "@/views/home/work/MyLibrary.vue";
-import LibraryWork from "@/views/home/work/LibraryWork.vue";
 import store from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "",
-    component: () => Home,
+    component: () => import("@/views/Home.vue"),
     children: [
       {
         path: "",
-        component: () => CommonHome,
+        component: () => import("@/views/home/HomeMain.vue"),
       },
       {
         path: "user",
-        component: () => HomeUser,
+        component: () => import("@/views/home/HomeUser.vue"),
         children: [
           {
             path: "info",
-            component: () => MyInformation,
+            component: () => import("@/views/home/user/MyInformation.vue"),
             meta: { requiresAuth: true, current: "info" },
           },
           {
             path: "avatar",
-            component: () => MyAvatar,
+            component: () => import("@/views/home/user/MyAvatar.vue"),
             meta: { requiresAuth: true, current: "avatar" },
           },
           {
             path: "security",
-            component: () => MySecurity,
+            component: () => import("@/views/home/user/MySecurity.vue"),
             meta: { requiresAuth: true, current: "security" },
           },
         ],
       },
       {
         path: "source",
-        component: () => HomeSource,
+        component: () => import("@/views/home/HomeSource.vue"),
       },
       {
         path: "work",
-        component: () => HomeWork,
+        component: () => import("@/views/home/HomeWork.vue"),
         children: [
           {
             path: "",
-            component: () => MyLibrary,
+            component: () => import("@/views/home/work/MyLibrary.vue"),
             meta: { requiresAuth: true },
           },
           {
             path: "library/:id",
-            component: () => LibraryWork,
+            component: () => import("@/views/home/work/LibraryWork.vue"),
             meta: { requiresAuth: true },
             props: true,
           },
@@ -68,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/dashboard",
-    component: () => Dashboard,
+    component: () => import("@/views/DashBoard.vue"),
   },
 ];
 

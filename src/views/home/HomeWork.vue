@@ -24,7 +24,7 @@
           </div>
           <div class="menu-container">
             <a-menu
-              v-model:selectedKeys="current"
+              v-model:selectedKeys="state.current"
               mode="horizontal"
               class="menu"
             >
@@ -48,7 +48,7 @@
             <svg-icon
               iconClass="add"
               class="icon"
-              @click="openModal"
+              @click="() => changeLibraryModalVisible(true)"
             ></svg-icon>
           </div>
           <div class="icon-container share">
@@ -61,55 +61,19 @@
       </div>
     </div>
     <router-view />
-    <a-modal
-      :visible="state.addLibraryModalVisible"
-      title="添加库"
-      :footer="null"
-      @cancel="closeModal"
-    >
-      <a-form
-        labelAlign="right"
-        :labelCol="{ span: 4 }"
-        :wrapperCol="{ span: 8 }"
-        :model="state.library"
-        :rules="rules"
-        @finish="addLibrarySubmit"
-      >
-        <a-form-item label="库名" name="lbName">
-          <a-input v-model:value="state.library.lbName"></a-input>
-        </a-form-item>
-        <a-form-item label="库类型" name="lbType">
-          <a-select
-            v-model:value="state.library.lbType"
-            :options="selectOp"
-          ></a-select>
-        </a-form-item>
-        <a-form-item
-          label="库描述"
-          :wrapperCol="{ span: 20 }"
-          name="lbDescription"
-        >
-          <a-textarea v-model:value="state.library.lbDescription"></a-textarea>
-        </a-form-item>
-        <a-form-item :wrapperCol="{ span: 24 }" style="text-align: right">
-          <a-button type="primary" htmlType="submit" style="margin-right: 10px"
-            >提交</a-button
-          >
-          <a-button htmlType="submit" @click="closeModal">取消</a-button>
-        </a-form-item>
-      </a-form>
-    </a-modal>
+    <library-modal
+      :isVisible="state.libraryModalVisible"
+      @changeLibraryModalVisible="changeLibraryModalVisible"
+      mode="add"
+    ></library-modal>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
-import { SelectTypes } from "ant-design-vue/es/select";
+import { defineComponent, reactive } from "vue";
 import wrapper from "@/assets/images/avatar-wrapper.png";
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import service from "@/utils/https";
-import urls from "@/utils/urls";
-import { useStore } from "vuex";
+import LibraryModal from "@/components/home/work/LibraryModal.vue";
 import {
   onBeforeRouteUpdate,
   RouteLocationNormalized,
@@ -119,72 +83,19 @@ import {
 export default defineComponent({
   name: "home-work",
   props: {},
-  components: { SvgIcon },
+  components: { SvgIcon, LibraryModal },
   setup() {
     const router = useRouter();
-    const store = useStore();
     const state = reactive({
-      addLibraryModalVisible: false,
-      library: {
-        lbName: "",
-        lbType: undefined,
-        lbDescription: "",
-      },
+      libraryModalVisible: false,
       isRouteWork: true,
+      current: [],
     });
-    const libraryInit = () => {
-      state.library = {
-        lbName: "",
-        lbType: undefined,
-        lbDescription: "",
-      };
+
+    const changeLibraryModalVisible = (visible: boolean) => {
+      state.libraryModalVisible = visible;
     };
-    const closeModal = () => {
-      state.addLibraryModalVisible = false;
-    };
-    const openModal = () => {
-      libraryInit();
-      state.addLibraryModalVisible = true;
-    };
-    const addLibrarySubmit = async (): Promise<void> => {
-      let formData = new FormData();
-      formData.append("library", JSON.stringify(state.library));
-      formData.append("id", JSON.stringify(store.state.user.id));
-      let data: any = await service.post(urls.addLibrary, formData);
-      console.log(data);
-    };
-    const rules = {
-      lbName: [
-        { required: true, message: "请输入库名", trigger: "change" },
-        { max: 16, message: "库名不能超过16个字符", trigger: "change" },
-      ],
-      lbType: [
-        {
-          type: "number",
-          required: true,
-          message: "请选择库类型",
-          trigger: "change",
-        },
-      ],
-      lbDescription: [
-        { required: true, message: "请输入库描述", trigger: "change" },
-        { max: 64, message: "库名不能超过64个字符", trigger: "change" },
-      ],
-    };
-    const selectOp = ref<SelectTypes["options"]>([
-      {
-        label: "图片库",
-        value: 1,
-      },
-      {
-        label: "Gif库",
-        value: 2,
-      },
-      {
-        label: "矢量库",
-        value: 3,
-      },
-    ]);
+
     onBeforeRouteUpdate((to: RouteLocationNormalized) => {
       state.isRouteWork = to.fullPath === "/work";
     });
@@ -196,12 +107,8 @@ export default defineComponent({
     return {
       state,
       wrapper,
-      closeModal,
-      openModal,
-      rules,
-      addLibrarySubmit,
-      selectOp,
       goWork,
+      changeLibraryModalVisible,
     };
   },
 });

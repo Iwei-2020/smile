@@ -31,6 +31,8 @@ export interface FileItem {
   type?: string;
   size: number;
   originFileObj: any;
+  preview?: string;
+  percent?: number;
 }
 
 export interface FileInfo {

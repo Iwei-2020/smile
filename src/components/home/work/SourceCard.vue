@@ -37,9 +37,15 @@
         <StarFilled v-if="false" class="pointer" />
       </span>
     </div>
-    <div class="edit-container">
+    <div class="edit-container" @click="() => changeLibraryModalVisible(true)">
       <EditFilled class="icon" />
     </div>
+    <library-modal
+      :isVisible="state.changeLibraryModalVisible"
+      @changeLibraryModalVisible="changeLibraryModalVisible"
+      mode="update"
+      :library="state.library"
+    ></library-modal>
   </div>
 </template>
 
@@ -47,6 +53,7 @@
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import { defineComponent, reactive } from "vue";
 import search from "@/assets/images/search.png";
+import LibraryModal from "./LibraryModal.vue";
 import {
   HeartFilled,
   EyeFilled,
@@ -61,13 +68,24 @@ export default defineComponent({
       required: true,
     },
   },
-  components: { SvgIcon, HeartFilled, EyeFilled, StarFilled, EditFilled },
+  components: {
+    SvgIcon,
+    HeartFilled,
+    EyeFilled,
+    StarFilled,
+    EditFilled,
+    LibraryModal,
+  },
   emits: ["goMyLibrary"],
   setup(props) {
     const state = reactive({
       library: props.library,
+      changeLibraryModalVisible: false,
     });
-    return { search, state };
+    const changeLibraryModalVisible = (visible: boolean) => {
+      state.changeLibraryModalVisible = visible;
+    };
+    return { search, state, changeLibraryModalVisible };
   },
 });
 </script>
