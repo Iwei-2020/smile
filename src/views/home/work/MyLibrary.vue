@@ -6,6 +6,7 @@
         :key="index"
         @goMyLibrary="goMyLibrary"
         :library="library"
+        :imageUrls="state.imageUrls[index]"
       ></source-card>
     </div>
   </div>
@@ -18,6 +19,8 @@ import { useRouter } from "vue-router";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
 import { useStore } from "vuex";
+import { Library } from "@/interface/interface";
+import emitter from "@/utils/mybus";
 
 export default defineComponent({
   props: {},
@@ -27,6 +30,7 @@ export default defineComponent({
     const store = useStore();
     const state = reactive({
       libraryArray: [],
+      imageUrls: [],
     });
     const goMyLibrary = (id: number) => {
       router.push(`/work/library/${id}`);
@@ -36,7 +40,28 @@ export default defineComponent({
         `${urls.getLibrary}/${store.state.user.id}`
       );
     };
-    onMounted(getLibrary);
+    const getImages = async (): Promise<void> => {
+      const libraryIds = state.libraryArray.map(
+        (library: Library) => library.lbId
+      );
+      let formData = new FormData();
+      libraryIds.forEach((id: any) => {
+        formData.append("libraryIds", id);
+      });
+      formData.append("getAll", "false");
+      state.imageUrls = await service.post(urls.getImage, formData);
+    };
+    const getImage = async (id: any): Promise<void> => {
+      let index = state.libraryArray.findIndex(
+        (library: Library) => library.lbId === id
+      );
+      state.imageUrls[index] = await service.get(`${urls.getImage}/${id}`);
+    };
+    onMounted(async (): Promise<void> => {
+      await getLibrary();
+      await getImages();
+      emitter.on("updateLibrary", getImage);
+    });
     return { goMyLibrary, state };
   },
 });

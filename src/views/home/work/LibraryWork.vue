@@ -1,21 +1,33 @@
 <template>
   <div class="library-work">
     <div class="grid-wrapper">
-      <image-card></image-card>
-      <image-card></image-card>
+      <image-card
+        v-for="(url, index) in state.imageUrls"
+        :key="index"
+        :url="url"
+      ></image-card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, onMounted, reactive } from "vue";
 import ImageCard from "@/components/home/work/ImageCard.vue";
+import service from "@/utils/https";
+import urls from "@/utils/urls";
 
 export default defineComponent({
   props: ["id"],
   components: { ImageCard },
-  setup() {
-    return {};
+  setup(props) {
+    const state = reactive({
+      imageUrls: [],
+    });
+    const getImage = async (): Promise<void> => {
+      state.imageUrls = await service.get(`${urls.getImage}/${props.id}`);
+    };
+    onMounted(getImage);
+    return { state };
   },
 });
 </script>

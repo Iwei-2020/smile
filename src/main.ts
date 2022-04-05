@@ -5,12 +5,10 @@ import store from "./store";
 import Antd from "ant-design-vue";
 import "@/less/theme.less";
 import "@/utils/iconfont";
-import service from "./utils/https";
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import "@/assets/svg";
 
 const app = createApp(App);
-app.config.globalProperties.$https = service;
 app.use(router).use(store);
 app.use(Antd);
 app.component("svg-icon", SvgIcon);

@@ -11,6 +11,7 @@ export const urls: any = {
   addLibrary: "library/add",
   getLibrary: "library/get",
   updateLibrary: "library/update",
+  getImage: "image/get",
 
   getArticleList: "getArticleList",
   likeArticle: "likeArticle",

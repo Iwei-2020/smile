@@ -1,17 +1,12 @@
 <template>
   <div class="source-card">
-    <div class="wrapper" @click="this.$emit('goMyLibrary', 1)">
-      <div class="img-container">
-        <svg-icon iconClass="duck1" class="icon"></svg-icon>
-      </div>
-      <div class="img-container">
-        <svg-icon iconClass="duck2" class="icon"></svg-icon>
-      </div>
-      <div class="img-container">
-        <svg-icon iconClass="duck3" class="icon"></svg-icon>
-      </div>
-      <div class="img-container">
-        <svg-icon iconClass="duck1" class="icon"></svg-icon>
+    <div class="wrapper" @click="this.$emit('goMyLibrary', state.library.lbId)">
+      <div
+        class="img-container"
+        v-for="(image, index) in state.images"
+        :key="index"
+      >
+        <img :src="image" class="img-area" />
       </div>
     </div>
     <div class="title-container">
@@ -43,6 +38,7 @@
     <library-modal
       :isVisible="state.changeLibraryModalVisible"
       @changeLibraryModalVisible="changeLibraryModalVisible"
+      @updateLibrary="updateLibrary"
       mode="update"
       :library="state.library"
     ></library-modal>
@@ -51,7 +47,7 @@
 
 <script lang="ts">
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, toRaw, toRefs, watch } from "vue";
 import search from "@/assets/images/search.png";
 import LibraryModal from "./LibraryModal.vue";
 import {
@@ -60,12 +56,16 @@ import {
   StarFilled,
   EditFilled,
 } from "@ant-design/icons-vue";
+import { Library } from "@/interface/interface";
 
 export default defineComponent({
   props: {
     library: {
       type: Object,
       required: true,
+    },
+    imageUrls: {
+      type: Array,
     },
   },
   components: {
@@ -78,14 +78,23 @@ export default defineComponent({
   },
   emits: ["goMyLibrary"],
   setup(props) {
+    const { imageUrls } = toRefs(props);
     const state = reactive({
       library: props.library,
       changeLibraryModalVisible: false,
+      images: [] as string[],
     });
     const changeLibraryModalVisible = (visible: boolean) => {
       state.changeLibraryModalVisible = visible;
     };
-    return { search, state, changeLibraryModalVisible };
+    const updateLibrary = (library: Library) => {
+      state.library = library;
+      console.log(state.library);
+    };
+    watch(imageUrls, (newValue: any) => {
+      state.images = newValue;
+    });
+    return { search, state, changeLibraryModalVisible, updateLibrary };
   },
 });
 </script>
@@ -107,14 +116,18 @@ export default defineComponent({
     }
   }
   .wrapper {
+    min-height: 212px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
     grid-gap: 32px;
     .img-container {
       height: 90px;
-      .icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .img-area {
         height: 100%;
-        width: 100%;
+        // width: 100%;
       }
     }
   }

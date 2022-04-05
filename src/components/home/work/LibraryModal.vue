@@ -65,13 +65,23 @@
 <script lang="ts">
 import service from "@/utils/https";
 import urls from "@/utils/urls";
-import { defineComponent, reactive, ref, toRaw } from "vue";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  toRaw,
+  toRefs,
+  watch,
+  isReactive,
+} from "vue";
 import { SelectTypes } from "ant-design-vue/es/select";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
-import { FileInfo, FileItem } from "@/interface/interface";
+import { FileInfo, FileItem, Library } from "@/interface/interface";
 import { getBase64 } from "@/utils/utils";
 import { PlusOutlined } from "@ant-design/icons-vue";
+import emitter from "@/utils/mybus";
 
 export default defineComponent({
   props: {
@@ -88,9 +98,10 @@ export default defineComponent({
     },
   },
   components: { PlusOutlined },
-  emits: ["changeLibraryModalVisible"],
+  emits: ["changeLibraryModalVisible", "updateLibrary"],
   setup(props, context) {
-    let library = toRaw(props.library);
+    const { library } = toRefs(props);
+    let raw = toRaw(props.library);
     const store = useStore();
     const state = reactive({
       library: {
@@ -102,26 +113,27 @@ export default defineComponent({
         lbWatch: undefined,
         lbCount: undefined,
         lbCreated: "",
-      },
+      } as Library,
       previewVisible: false,
       fileList: [] as FileItem[],
       previewImage: "" as string | undefined,
     });
     const libraryInit = () => {
-      state.library = library
-        ? (library as any)
-        : {
-            lbId: undefined,
-            lbName: "",
-            lbType: undefined,
-            lbDescription: "",
-            lbLike: undefined,
-            lbWatch: undefined,
-            lbCount: undefined,
-            lbCreated: "",
-          };
+      if (props.library) {
+        state.library = JSON.parse(JSON.stringify(raw));
+      } else {
+        state.library = {
+          lbId: undefined,
+          lbName: "",
+          lbType: undefined,
+          lbDescription: "",
+          lbLike: undefined,
+          lbWatch: undefined,
+          lbCount: undefined,
+          lbCreated: "",
+        };
+      }
     };
-    libraryInit();
     const rules = {
       lbName: [
         { required: true, message: "请输入库名", trigger: "change" },
@@ -183,18 +195,15 @@ export default defineComponent({
       }
       return false;
     };
-
     const isUpdate = props.mode === "update" ? true : false;
     const addLibrarySubmit = async (): Promise<void> => {
       if (!isUpdate) {
         let formData = new FormData();
         formData.append("library", JSON.stringify(state.library));
         formData.append("id", JSON.stringify(store.state.user.id));
-        let data: any = await service.post(urls.addLibrary, formData);
+        await service.post(urls.addLibrary, formData);
         message.success("创建成功");
-        libraryInit();
         changeLibraryModalVisible();
-        console.log(data);
       } else {
         let formData = new FormData();
         formData.append("library", JSON.stringify(state.library));
@@ -203,14 +212,22 @@ export default defineComponent({
           console.log(file.name);
           formData.append("files", file.originFileObj);
         });
-        let data: any = await service.post(urls.updateLibrary, formData);
-        message.success("修改成功");
-        libraryInit();
+        await service.post(urls.updateLibrary, formData);
+        emitter.emit("updateLibrary", state.library.lbId);
+        message.success("更新成功");
+        context.emit("updateLibrary", state.library);
         changeLibraryModalVisible();
-        console.log(data);
       }
     };
 
+    watch(library, (newValue: any) => {
+      let raw = toRaw(newValue);
+      state.library = JSON.parse(JSON.stringify(raw));
+    });
+
+    onMounted(() => {
+      libraryInit();
+    });
     return {
       state,
       rules,

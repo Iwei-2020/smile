@@ -1,10 +1,7 @@
 <template>
   <div class="image-card">
     <div class="image-wrapper">
-      <a-image
-        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        class="image"
-      ></a-image>
+      <img :src="url" class="image" />
     </div>
     <span class="icon-name">
       <span>处理中</span>
@@ -20,7 +17,12 @@ import { defineComponent } from "vue";
 import { DownloadOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
   name: "",
-  props: {},
+  props: {
+    url: {
+      type: String,
+      required: true,
+    },
+  },
   components: { DownloadOutlined },
 });
 </script>
@@ -53,7 +55,7 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     .image {
-      height: auto;
+      height: 220px;
       max-width: 100%;
     }
   }
@@ -68,6 +70,7 @@ export default defineComponent({
     font-size: 12px;
   }
   .icon-cover {
+    cursor: pointer;
     width: 100%;
     height: 100%;
     background: rgba(13, 10, 49, 0.9);
