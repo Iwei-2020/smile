@@ -73,7 +73,6 @@ import {
   toRaw,
   toRefs,
   watch,
-  isReactive,
 } from "vue";
 import { SelectTypes } from "ant-design-vue/es/select";
 import { useStore } from "vuex";
@@ -98,7 +97,7 @@ export default defineComponent({
     },
   },
   components: { PlusOutlined },
-  emits: ["changeLibraryModalVisible", "updateLibrary"],
+  emits: ["changeLibraryModalVisible"],
   setup(props, context) {
     const { library } = toRefs(props);
     let raw = toRaw(props.library);
@@ -107,6 +106,7 @@ export default defineComponent({
       library: {
         lbId: undefined,
         lbName: "",
+        lbCreator: "",
         lbType: undefined,
         lbDescription: "",
         lbLike: undefined,
@@ -125,6 +125,7 @@ export default defineComponent({
         state.library = {
           lbId: undefined,
           lbName: "",
+          lbCreator: "",
           lbType: undefined,
           lbDescription: "",
           lbLike: undefined,
@@ -199,10 +200,12 @@ export default defineComponent({
     const addLibrarySubmit = async (): Promise<void> => {
       if (!isUpdate) {
         let formData = new FormData();
+        state.library.lbCreator = store.getters.getUser.username;
         formData.append("library", JSON.stringify(state.library));
         formData.append("id", JSON.stringify(store.state.user.id));
         await service.post(urls.addLibrary, formData);
         message.success("创建成功");
+        emitter.emit("refreshLibrary");
         changeLibraryModalVisible();
       } else {
         let formData = new FormData();
@@ -215,7 +218,6 @@ export default defineComponent({
         await service.post(urls.updateLibrary, formData);
         emitter.emit("updateLibrary", state.library.lbId);
         message.success("更新成功");
-        context.emit("updateLibrary", state.library);
         changeLibraryModalVisible();
       }
     };

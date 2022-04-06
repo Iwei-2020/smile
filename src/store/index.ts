@@ -19,7 +19,7 @@ const userInit = () => {
     signature: "",
     avatarUrl: "",
     collectionCount: undefined,
-    favoritesCounn: undefined,
+    likedCount: undefined,
   } as User;
 };
 

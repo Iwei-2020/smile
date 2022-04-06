@@ -16,33 +16,8 @@
             class="avatar"
           ></a-avatar>
         </div>
-        <div class="info-container">
-          <div class="info">
-            <span class="title">UserName</span>
-            <span class="vertical-divider">|</span>
-            <span>0点赞</span>
-          </div>
-          <div class="menu-container">
-            <a-menu
-              v-model:selectedKeys="state.current"
-              mode="horizontal"
-              class="menu"
-            >
-              <a-menu-item key="mail">
-                <span>图片库</span>
-              </a-menu-item>
-              <a-menu-item key="app">
-                <span>Gif库</span>
-              </a-menu-item>
-              <a-menu-item key="alipay">
-                <span>矢量库</span>
-              </a-menu-item>
-              <a-menu-item key="coll">
-                <span>收藏</span>
-              </a-menu-item>
-            </a-menu>
-          </div>
-        </div>
+        <info-container v-if="false"></info-container>
+        <library-info v-else></library-info>
         <div class="ops-container">
           <div class="icon-container add" v-if="state.isRouteWork">
             <svg-icon
@@ -60,7 +35,8 @@
         </div>
       </div>
     </div>
-    <router-view />
+    <router-view v-if="state.showLibrary" />
+    <a-empty v-else class="empty" />
     <library-modal
       :isVisible="state.libraryModalVisible"
       @changeLibraryModalVisible="changeLibraryModalVisible"
@@ -74,6 +50,9 @@ import { defineComponent, reactive } from "vue";
 import wrapper from "@/assets/images/avatar-wrapper.png";
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import LibraryModal from "@/components/home/work/LibraryModal.vue";
+import InfoContainer from "@/components/home/work/InfoContainer.vue";
+import LibraryInfo from "@/components/home/work/LibraryInfo.vue";
+import emitter from "@/utils/mybus";
 import {
   onBeforeRouteUpdate,
   RouteLocationNormalized,
@@ -83,19 +62,18 @@ import {
 export default defineComponent({
   name: "home-work",
   props: {},
-  components: { SvgIcon, LibraryModal },
+  components: { SvgIcon, LibraryModal, InfoContainer, LibraryInfo },
   setup() {
     const router = useRouter();
     const state = reactive({
       libraryModalVisible: false,
       isRouteWork: true,
-      current: [],
+      showLibrary: true,
     });
 
     const changeLibraryModalVisible = (visible: boolean) => {
       state.libraryModalVisible = visible;
     };
-
     onBeforeRouteUpdate((to: RouteLocationNormalized) => {
       state.isRouteWork = to.fullPath === "/work";
     });
@@ -104,6 +82,10 @@ export default defineComponent({
         router.push("/work");
       }
     };
+    const changeShowLibrary = (show: any) => {
+      state.showLibrary = show;
+    };
+    emitter.on("changeShowLibrary", changeShowLibrary);
     return {
       state,
       wrapper,
@@ -144,43 +126,7 @@ export default defineComponent({
           left: 20px;
         }
       }
-      .info-container {
-        height: 130px;
-        width: 854px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        .info {
-          padding-left: 20px;
-          font-size: 16px;
-          font-weight: 800;
-          .vertical-divider {
-            margin: 0 10px;
-          }
-        }
-        .menu-container {
-          :deep(.ant-menu) {
-            color: #a6a5ad;
-            font-weight: 800;
-            background-color: rgb(9, 7, 35);
-            border-bottom: none;
-          }
-          :deep(.ant-menu-item) {
-            &:hover {
-              color: #ffffff;
-            }
-            &::after {
-              border-bottom: none;
-            }
-          }
-          :deep(.ant-menu-item-selected) {
-            color: #ffffff;
-            &::after {
-              border-bottom: 2px red solid;
-            }
-          }
-        }
-      }
+
       .ops-container {
         position: relative;
         top: 24px;
@@ -209,6 +155,9 @@ export default defineComponent({
         }
       }
     }
+  }
+  .empty {
+    margin-top: 50px;
   }
 }
 .pointer {

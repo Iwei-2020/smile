@@ -6,7 +6,7 @@
         :key="index"
         @goMyLibrary="goMyLibrary"
         :library="library"
-        :imageUrls="state.imageUrls[index]"
+        :images="state.librarysImagesArray[index]"
       ></source-card>
     </div>
   </div>
@@ -30,15 +30,24 @@ export default defineComponent({
     const store = useStore();
     const state = reactive({
       libraryArray: [],
-      imageUrls: [],
+      librarysImagesArray: [],
     });
     const goMyLibrary = (id: number) => {
       router.push(`/work/library/${id}`);
+      let index = state.libraryArray.findIndex(
+        (library: any) => library.lbId === id
+      );
+      emitter.emit("getLibrary", state.libraryArray[index]);
     };
     const getLibrary = async (): Promise<void> => {
       state.libraryArray = await service.get(
         `${urls.getLibrary}/${store.state.user.id}`
       );
+      if (state.libraryArray.length === 0) {
+        emitter.emit("changeShowLibrary", false);
+      } else {
+        emitter.emit("changeShowLibrary", true);
+      }
     };
     const getImages = async (): Promise<void> => {
       const libraryIds = state.libraryArray.map(
@@ -46,21 +55,24 @@ export default defineComponent({
       );
       let formData = new FormData();
       libraryIds.forEach((id: any) => {
-        formData.append("libraryIds", id);
+        formData.append("lbIds", id);
       });
       formData.append("getAll", "false");
-      state.imageUrls = await service.post(urls.getImage, formData);
+      state.librarysImagesArray = await service.post(urls.getImage, formData);
     };
-    const getImage = async (id: any): Promise<void> => {
+    const getImage = async (lbId: any): Promise<void> => {
       let index = state.libraryArray.findIndex(
-        (library: Library) => library.lbId === id
+        (library: Library) => library.lbId === lbId
       );
-      state.imageUrls[index] = await service.get(`${urls.getImage}/${id}`);
+      state.librarysImagesArray[index] = await service.get(
+        `${urls.getImage}/${lbId}`
+      );
     };
     onMounted(async (): Promise<void> => {
       await getLibrary();
       await getImages();
       emitter.on("updateLibrary", getImage);
+      emitter.on("refreshLibrary", getLibrary);
     });
     return { goMyLibrary, state };
   },

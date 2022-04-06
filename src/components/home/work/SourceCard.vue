@@ -1,12 +1,15 @@
 <template>
   <div class="source-card">
-    <div class="wrapper" @click="this.$emit('goMyLibrary', state.library.lbId)">
+    <div
+      :class="{ wrapper: true, 'back-image': state.images.length === 0 }"
+      @click="this.$emit('goMyLibrary', state.library.lbId)"
+    >
       <div
         class="img-container"
         v-for="(image, index) in state.images"
         :key="index"
       >
-        <img :src="image" class="img-area" />
+        <img :src="image.url" class="img-area" />
       </div>
     </div>
     <div class="title-container">
@@ -64,7 +67,7 @@ export default defineComponent({
       type: Object,
       required: true,
     },
-    imageUrls: {
+    images: {
       type: Array,
     },
   },
@@ -78,11 +81,11 @@ export default defineComponent({
   },
   emits: ["goMyLibrary"],
   setup(props) {
-    const { imageUrls } = toRefs(props);
+    const { images } = toRefs(props);
     const state = reactive({
       library: props.library,
       changeLibraryModalVisible: false,
-      images: [] as string[],
+      images: [],
     });
     const changeLibraryModalVisible = (visible: boolean) => {
       state.changeLibraryModalVisible = visible;
@@ -91,7 +94,7 @@ export default defineComponent({
       state.library = library;
       console.log(state.library);
     };
-    watch(imageUrls, (newValue: any) => {
+    watch(images, (newValue: any) => {
       state.images = newValue;
     });
     return { search, state, changeLibraryModalVisible, updateLibrary };
@@ -100,6 +103,12 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+.back-image {
+  background-image: url(../../../assets/images/empty.png);
+  background-size: 212px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .source-card {
   cursor: pointer;
   transition: box-shadow 0.4s, transform 0.4s;
@@ -127,7 +136,9 @@ export default defineComponent({
       align-items: center;
       .img-area {
         height: 100%;
-        // width: 100%;
+      }
+      img {
+        image-rendering: -webkit-optimize-contrast;
       }
     }
   }

@@ -1,13 +1,13 @@
 <template>
   <div class="image-card">
     <div class="image-wrapper">
-      <img :src="url" class="image" />
+      <img :src="image.url" class="image" />
     </div>
     <span class="icon-name">
-      <span>处理中</span>
+      <span>{{ image.name }}</span>
     </span>
     <div class="icon-cover">
-      <DownloadOutlined class="icon" />
+      <DownloadOutlined @click="download" class="icon" />
     </div>
   </div>
 </template>
@@ -15,13 +15,20 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { DownloadOutlined } from "@ant-design/icons-vue";
+import { downloadIamge } from "@/utils/utils";
 export default defineComponent({
   name: "",
   props: {
-    url: {
-      type: String,
+    image: {
+      type: Object,
       required: true,
     },
+  },
+  setup(props) {
+    const download = () => {
+      downloadIamge(props.image.url, props.image.name);
+    };
+    return { download };
   },
   components: { DownloadOutlined },
 });

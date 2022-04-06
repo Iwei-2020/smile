@@ -8,12 +8,13 @@ export interface User {
   signature?: string;
   avatarUrl?: string;
   collectionCount?: 0;
-  favoritesCount?: 0;
+  likedCount?: 0;
 }
 
 export interface Library {
   lbId?: number;
   lbName?: string;
+  lbCreator?: string;
   lbType?: number;
   lbDescription?: string;
   lbLike?: number;

@@ -2,11 +2,12 @@
   <div class="library-work">
     <div class="grid-wrapper">
       <image-card
-        v-for="(url, index) in state.imageUrls"
+        v-for="(image, index) in state.images"
         :key="index"
-        :url="url"
+        :image="image"
       ></image-card>
     </div>
+    <a-empty v-if="state.images.length === 0" />
   </div>
 </template>
 
@@ -21,10 +22,10 @@ export default defineComponent({
   components: { ImageCard },
   setup(props) {
     const state = reactive({
-      imageUrls: [],
+      images: [],
     });
     const getImage = async (): Promise<void> => {
-      state.imageUrls = await service.get(`${urls.getImage}/${props.id}`);
+      state.images = await service.get(`${urls.getImage}/${props.id}`);
     };
     onMounted(getImage);
     return { state };
