@@ -7,13 +7,14 @@ export const urls: any = {
   logout: "user/logout",
   changeAvatar: "user/avatar",
   getDefaultAvatar: "user/getDefaultAvatar",
+  getAuthor: "user/author",
 
   addLibrary: "library/add",
   getLibrary: "library/get",
   updateLibrary: "library/update",
+  getSpecificLibrary: "library/specific",
   getImage: "image/get",
 
-  getArticleList: "getArticleList",
   likeArticle: "likeArticle",
   getArticleDetail: "getArticleDetail",
 

@@ -7,7 +7,7 @@
 import { createFromIconfontCN } from "@ant-design/icons-vue";
 import { defineComponent } from "vue";
 const IconFont = createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_3234326_in2rpv9fdrm.js",
+  scriptUrl: "//at.alicdn.com/t/font_3234326_fww3gfwf63c.js",
 });
 export default defineComponent({
   props: {

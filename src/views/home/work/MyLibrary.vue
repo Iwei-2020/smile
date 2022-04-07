@@ -7,13 +7,14 @@
         @goMyLibrary="goMyLibrary"
         :library="library"
         :images="state.librarysImagesArray[index]"
+        :isAuthor="true"
       ></source-card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, onUnmounted, reactive } from "vue";
 import SourceCard from "@/components/home/work/SourceCard.vue";
 import { useRouter } from "vue-router";
 import service from "@/utils/https";
@@ -33,11 +34,12 @@ export default defineComponent({
       librarysImagesArray: [],
     });
     const goMyLibrary = (id: number) => {
-      router.push(`/work/library/${id}`);
-      let index = state.libraryArray.findIndex(
-        (library: any) => library.lbId === id
-      );
-      emitter.emit("getLibrary", state.libraryArray[index]);
+      router.push(`/work/library/${id}`).then(() => {
+        let index = state.libraryArray.findIndex(
+          (library: any) => library.lbId === id
+        );
+        emitter.emit("getLibrary", state.libraryArray[index]);
+      });
     };
     const getLibrary = async (): Promise<void> => {
       state.libraryArray = await service.get(
@@ -73,6 +75,10 @@ export default defineComponent({
       await getImages();
       emitter.on("updateLibrary", getImage);
       emitter.on("refreshLibrary", getLibrary);
+    });
+    onUnmounted(() => {
+      emitter.off("updateLibrary");
+      emitter.off("refreshLibrary");
     });
     return { goMyLibrary, state };
   },

@@ -212,7 +212,6 @@ export default defineComponent({
         formData.append("library", JSON.stringify(state.library));
         formData.append("id", JSON.stringify(store.state.user.id));
         state.fileList.forEach((file) => {
-          console.log(file.name);
           formData.append("files", file.originFileObj);
         });
         await service.post(urls.updateLibrary, formData);

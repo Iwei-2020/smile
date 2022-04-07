@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, onMounted, onUnmounted, reactive } from "vue";
 import emitter from "@/utils/mybus";
 
 export default defineComponent({
@@ -33,8 +33,14 @@ export default defineComponent({
     });
     const getLibrary = (library: any) => {
       state.library = library;
+      emitter.emit("changeShowInfo", false);
     };
-    emitter.on("getLibrary", getLibrary);
+    onMounted(() => {
+      emitter.on("getLibrary", getLibrary);
+    });
+    onUnmounted(() => {
+      emitter.off("getLibrary");
+    });
     return { state };
   },
 });

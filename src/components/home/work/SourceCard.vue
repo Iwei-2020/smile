@@ -1,7 +1,7 @@
 <template>
   <div class="source-card">
     <div
-      :class="{ wrapper: true, 'back-image': state.images.length === 0 }"
+      :class="state.wrapperClass"
       @click="this.$emit('goMyLibrary', state.library.lbId)"
     >
       <div
@@ -21,21 +21,29 @@
       </span>
     </div>
     <div class="ops-container">
-      <span v-if="false">
-        <a-avatar :size="24" class="avatar"></a-avatar>
+      <span v-if="!isAuthor">
+        <a-avatar
+          :size="24"
+          class="avatar"
+          :src="state.author.avatarUrl"
+        ></a-avatar>
         <span class="author-name">passion</span>
       </span>
       <span class="ops-area">
         <EyeFilled />
         <span class="count mr10">{{ state.library.lbWatch }}</span>
         <HeartFilled class="pointer" />
-        <span :class="{ count: true, mr10: false }">{{
+        <span :class="{ count: true, mr10: !isAuthor }">{{
           state.library.lbLike
         }}</span>
-        <StarFilled v-if="false" class="pointer" />
+        <StarFilled v-if="!isAuthor" class="pointer" />
       </span>
     </div>
-    <div class="edit-container" @click="() => changeLibraryModalVisible(true)">
+    <div
+      v-if="isAuthor"
+      class="edit-container"
+      @click="() => changeLibraryModalVisible(true)"
+    >
       <EditFilled class="icon" />
     </div>
     <library-modal
@@ -50,7 +58,7 @@
 
 <script lang="ts">
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import { defineComponent, reactive, toRaw, toRefs, watch } from "vue";
+import { defineComponent, reactive, toRefs, watch } from "vue";
 import search from "@/assets/images/search.png";
 import LibraryModal from "./LibraryModal.vue";
 import {
@@ -69,6 +77,15 @@ export default defineComponent({
     },
     images: {
       type: Array,
+      default: () => [],
+    },
+    isAuthor: {
+      type: Boolean,
+      default: false,
+      required: true,
+    },
+    author: {
+      type: Object,
     },
   },
   components: {
@@ -81,29 +98,37 @@ export default defineComponent({
   },
   emits: ["goMyLibrary"],
   setup(props) {
-    const { images } = toRefs(props);
+    const { images, author } = toRefs(props);
     const state = reactive({
       library: props.library,
       changeLibraryModalVisible: false,
       images: [],
+      wrapperClass: { wrapper: true } as any,
+      author: {
+        avatarUrl: "",
+      },
     });
     const changeLibraryModalVisible = (visible: boolean) => {
       state.changeLibraryModalVisible = visible;
     };
     const updateLibrary = (library: Library) => {
       state.library = library;
-      console.log(state.library);
     };
     watch(images, (newValue: any) => {
       state.images = newValue;
+      state.wrapperClass.backImage = state.images.length === 0;
     });
+    watch(author, (newValue: any) => {
+      state.author = newValue;
+    });
+
     return { search, state, changeLibraryModalVisible, updateLibrary };
   },
 });
 </script>
 
 <style scoped lang="less">
-.back-image {
+.backImage {
   background-image: url(../../../assets/images/empty.png);
   background-size: 212px;
   background-position: center;

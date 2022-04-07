@@ -16,8 +16,8 @@
             class="avatar"
           ></a-avatar>
         </div>
-        <info-container v-if="false"></info-container>
-        <library-info v-else></library-info>
+        <library-info v-if="state.showInfo"></library-info>
+        <info-container v-else></info-container>
         <div class="ops-container">
           <div class="icon-container add" v-if="state.isRouteWork">
             <svg-icon
@@ -26,7 +26,7 @@
               @click="() => changeLibraryModalVisible(true)"
             ></svg-icon>
           </div>
-          <div class="icon-container share">
+          <div id="copy-link" class="icon-container share">
             <svg-icon iconClass="share" class="icon"></svg-icon>
           </div>
           <div class="icon-container reward">
@@ -46,37 +46,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, onMounted, onUnmounted, reactive } from "vue";
 import wrapper from "@/assets/images/avatar-wrapper.png";
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import LibraryModal from "@/components/home/work/LibraryModal.vue";
 import InfoContainer from "@/components/home/work/InfoContainer.vue";
 import LibraryInfo from "@/components/home/work/LibraryInfo.vue";
 import emitter from "@/utils/mybus";
+import Clipboard from "clipboard";
 import {
   onBeforeRouteUpdate,
   RouteLocationNormalized,
   useRouter,
 } from "vue-router";
+import { message } from "ant-design-vue";
 
 export default defineComponent({
   name: "home-work",
   props: {},
   components: { SvgIcon, LibraryModal, InfoContainer, LibraryInfo },
   setup() {
+    const clipboard = new Clipboard("#copy-link", {
+      text: () => location.href,
+    });
     const router = useRouter();
     const state = reactive({
       libraryModalVisible: false,
       isRouteWork: true,
       showLibrary: true,
+      showInfo: false,
     });
-
     const changeLibraryModalVisible = (visible: boolean) => {
       state.libraryModalVisible = visible;
     };
-    onBeforeRouteUpdate((to: RouteLocationNormalized) => {
-      state.isRouteWork = to.fullPath === "/work";
-    });
     const goWork = () => {
       if (!state.isRouteWork) {
         router.push("/work");
@@ -85,7 +87,24 @@ export default defineComponent({
     const changeShowLibrary = (show: any) => {
       state.showLibrary = show;
     };
-    emitter.on("changeShowLibrary", changeShowLibrary);
+    const initClipboard = () => {
+      clipboard.on("success", () => {
+        message.success("链接已复制到粘贴板");
+      });
+      clipboard.on("error", () => message.error("复制失败"));
+    };
+    onMounted(() => {
+      emitter.on("changeShowLibrary", changeShowLibrary);
+      initClipboard();
+    });
+    onUnmounted(() => {
+      clipboard.destroy();
+      emitter.off("changeShowLibrary");
+    });
+    onBeforeRouteUpdate((to: RouteLocationNormalized) => {
+      state.isRouteWork = to.fullPath === "/work";
+      state.showInfo = to.fullPath.includes("/work/library/");
+    });
     return {
       state,
       wrapper,
