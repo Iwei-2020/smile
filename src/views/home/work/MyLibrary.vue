@@ -6,8 +6,10 @@
         :key="index"
         @goMyLibrary="goMyLibrary"
         :library="library"
-        :images="state.librarysImagesArray[index]"
+        :images="state.imagesArray[index]"
         :isAuthor="true"
+        :isLike="state.likeArray[index]"
+        :isStar="state.starArray[index]"
       ></source-card>
     </div>
   </div>
@@ -31,7 +33,9 @@ export default defineComponent({
     const store = useStore();
     const state = reactive({
       libraryArray: [],
-      librarysImagesArray: [],
+      imagesArray: [],
+      likeArray: [],
+      starArray: [],
     });
     const goMyLibrary = (id: number) => {
       router.push(`/work/library/${id}`).then(() => {
@@ -60,15 +64,20 @@ export default defineComponent({
         formData.append("lbIds", id);
       });
       formData.append("getAll", "false");
-      state.librarysImagesArray = await service.post(urls.getImage, formData);
+      formData.append("userId", store.getters.getUser.id);
+      let { imagesArray, likeArray, starArray } = (await service.post(
+        urls.getImage,
+        formData
+      )) as any;
+      state.imagesArray = imagesArray;
+      state.likeArray = likeArray;
+      state.starArray = starArray;
     };
     const getImage = async (lbId: any): Promise<void> => {
       let index = state.libraryArray.findIndex(
         (library: Library) => library.lbId === lbId
       );
-      state.librarysImagesArray[index] = await service.get(
-        `${urls.getImage}/${lbId}`
-      );
+      state.imagesArray[index] = await service.get(`${urls.getImage}/${lbId}`);
     };
     onMounted(async (): Promise<void> => {
       await getLibrary();

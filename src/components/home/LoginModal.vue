@@ -25,9 +25,9 @@
       <a-form-item label="手机号" name="phone">
         <a-input v-model:value="state.userForm.phone"></a-input>
       </a-form-item>
-      <a-form-item label="密码" name="password">
+      <a-form-item label="密码" name="certificate">
         <a-input
-          v-model:value="state.userForm.password"
+          v-model:value="state.userForm.certificate"
           type="password"
         ></a-input>
       </a-form-item>
@@ -88,14 +88,14 @@ export default defineComponent({
     const userFormInit = () => {
       state.userForm = {
         phone: "",
-        password: "",
+        certificate: "",
         checkCode: "",
       };
     };
     const state = reactive({
       userForm: {
         phone: "",
-        password: "",
+        certificate: "",
         checkCode: "",
       },
       rules: {
@@ -106,7 +106,7 @@ export default defineComponent({
             trigger: "change",
           },
         ],
-        password: [
+        certificate: [
           {
             required: true,
             trigger: "change",

@@ -13,12 +13,11 @@ const userInit = () => {
     id: undefined,
     username: "",
     phone: "",
-    password: "",
+    certificate: "",
     gender: undefined,
     birthday: undefined,
     signature: "",
     avatarUrl: "",
-    collectionCount: undefined,
     likedCount: undefined,
   } as User;
 };

@@ -25,18 +25,25 @@
         <a-avatar
           :size="24"
           class="avatar"
-          :src="state.author.avatarUrl"
+          :src="state.author && state.author.avatarUrl"
         ></a-avatar>
         <span class="author-name">passion</span>
       </span>
       <span class="ops-area">
-        <EyeFilled />
+        <EyeFilled style="cursor: auto" />
         <span class="count mr10">{{ state.library.lbWatch }}</span>
-        <HeartFilled class="pointer" />
+        <HeartFilled
+          :class="{ pointer: true, red: true, liked: isLike }"
+          @click="() => handleLikeOrStar('like')"
+        />
         <span :class="{ count: true, mr10: !isAuthor }">{{
           state.library.lbLike
         }}</span>
-        <StarFilled v-if="!isAuthor" class="pointer" />
+        <StarFilled
+          v-if="!isAuthor"
+          :class="{ pointer: true, yellow: true, star: isStar }"
+          @click="() => handleLikeOrStar('star')"
+        />
       </span>
     </div>
     <div
@@ -68,6 +75,9 @@ import {
   EditFilled,
 } from "@ant-design/icons-vue";
 import { Library } from "@/interface/interface";
+import service from "@/utils/https";
+import urls from "@/utils/urls";
+import { useStore } from "vuex";
 
 export default defineComponent({
   props: {
@@ -87,6 +97,14 @@ export default defineComponent({
     author: {
       type: Object,
     },
+    isLike: {
+      type: Boolean,
+      default: false,
+    },
+    isStar: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     SvgIcon,
@@ -96,23 +114,38 @@ export default defineComponent({
     EditFilled,
     LibraryModal,
   },
-  emits: ["goMyLibrary"],
-  setup(props) {
-    const { images, author } = toRefs(props);
+  emits: ["goMyLibrary", "changeLikeOrStar"],
+  setup(props, context) {
+    const { images, author, isLike, isStar } = toRefs(props);
+    const store = useStore();
     const state = reactive({
       library: props.library,
       changeLibraryModalVisible: false,
       images: [],
       wrapperClass: { wrapper: true } as any,
-      author: {
-        avatarUrl: "",
-      },
+      author: props.author,
     });
     const changeLibraryModalVisible = (visible: boolean) => {
       state.changeLibraryModalVisible = visible;
     };
     const updateLibrary = (library: Library) => {
       state.library = library;
+    };
+    const handleLikeOrStar = async (starOrLike: string): Promise<void> => {
+      let formData = new FormData();
+      formData.append("user_id", store.getters.getUser.id);
+      formData.append("lbId", state.library.lbId);
+      formData.append("type", starOrLike);
+      if (starOrLike === "star") {
+        formData.append("ops", isStar.value ? "0" : "1");
+      } else if (starOrLike === "like") {
+        formData.append("ops", isLike.value ? "0" : "1");
+      }
+      await service.post(urls.likeOrStar, formData);
+      context.emit("changeLikeOrStar", {
+        lbId: state.library.lbId,
+        type: starOrLike,
+      });
     };
     watch(images, (newValue: any) => {
       state.images = newValue;
@@ -122,7 +155,13 @@ export default defineComponent({
       state.author = newValue;
     });
 
-    return { search, state, changeLibraryModalVisible, updateLibrary };
+    return {
+      search,
+      state,
+      changeLibraryModalVisible,
+      updateLibrary,
+      handleLikeOrStar,
+    };
   },
 });
 </script>
@@ -200,10 +239,26 @@ export default defineComponent({
       :deep(.anticon) {
         line-height: 24px;
         opacity: 0.5;
+      }
+      .red {
         &:hover {
           opacity: 1;
           color: rgb(235, 10, 47);
         }
+      }
+      .yellow {
+        &:hover {
+          opacity: 1;
+          color: rgb(233, 233, 10);
+        }
+      }
+      .liked {
+        opacity: 1;
+        color: rgb(235, 10, 47);
+      }
+      .star {
+        opacity: 1;
+        color: rgb(233, 233, 10);
       }
       .count {
         line-height: 24px;

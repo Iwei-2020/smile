@@ -13,6 +13,9 @@ export const urls: any = {
   getLibrary: "library/get",
   updateLibrary: "library/update",
   getSpecificLibrary: "library/specific",
+  watchLibrary: "library/watch",
+  likeOrStar: "library/likeOrStar",
+
   getImage: "image/get",
 
   likeArticle: "likeArticle",

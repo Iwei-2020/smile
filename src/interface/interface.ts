@@ -2,12 +2,11 @@ export interface User {
   id?: number;
   username?: string;
   phone?: string;
-  password?: string;
+  certificate?: string;
   gender?: number;
   birthday?: Date;
   signature?: string;
   avatarUrl?: string;
-  collectionCount?: 0;
   likedCount?: 0;
 }
 

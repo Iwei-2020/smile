@@ -43,7 +43,7 @@
       </div>
       <div class="avatar-container" v-else>
         <div class="notice-container">
-          <a-badge count="5" :offset="[-4, 4]">
+          <a-badge count="5" :offset="[-4, 12]">
             <BellOutlined class="notice-icon" />
           </a-badge>
         </div>
@@ -67,7 +67,7 @@
           </template>
           <a-avatar
             :src="this.$store.getters.getUser.avatarUrl"
-            :size="36"
+            :size="48"
             class="avatar"
           ></a-avatar>
         </a-popover>
@@ -176,11 +176,11 @@ export default defineComponent({
     .avatar-container {
       display: flex;
       height: 80px;
-      padding: 22px 0;
+      padding: 16px 0;
       .notice-container {
         margin: 0 20px;
         .notice-icon {
-          line-height: 36px;
+          line-height: 48px;
           font-size: 24px;
           color: rgb(110, 109, 122);
         }
