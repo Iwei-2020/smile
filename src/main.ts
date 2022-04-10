@@ -7,9 +7,13 @@ import "@/less/theme.less";
 import "@/utils/iconfont";
 import SvgIcon from "@/components/common/SvgIcon.vue";
 import "@/assets/svg";
+import eChartFn from "@/components/chart/index";
+import ChartPanel from "@/components/chart/index.vue";
 
 const app = createApp(App);
 app.use(router).use(store);
 app.use(Antd);
 app.component("svg-icon", SvgIcon);
+app.component(ChartPanel.name, ChartPanel);
+app.provide("eChartFn", () => eChartFn);
 app.mount("#app");

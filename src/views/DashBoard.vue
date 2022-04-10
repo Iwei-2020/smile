@@ -26,17 +26,9 @@ export default defineComponent({
 
 <style scoped lang="less">
 .dashboard {
-  padding: 10px;
-  box-sizing: border-box;
-  .dashboard-content {
-  }
-  .side-bar {
-    height: 100vh;
-    margin: 0 auto;
-  }
-  .main-area {
-    height: 100vh;
-    // background-image: linear-gradient(to top, #cfd9df 0%, #e2ebf0 100%);
-  }
+  background-image: url(../assets/images/dashboard.png);
+  width: 1440px;
+  height: 990px;
+  margin: 0 auto;
 }
 </style>

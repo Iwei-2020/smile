@@ -37,25 +37,6 @@
         </template>
       </a-input>
     </div>
-    <!-- <a-row>
-      <a-col :span="16">
-        <a-card class="card-main">
-          <div class="icon-area">
-            <div
-              v-for="(item, index) in state.iconList"
-              :key="index"
-              class="icon-wrapper"
-            >
-              <icon-font :iconName="item.iconName"></icon-font>
-              <p>{{ item.title }}</p>
-            </div>
-          </div>
-          <div class="works-card-div">
-            <works-card></works-card>
-          </div>
-        </a-card>
-      </a-col>
-    </a-row> -->
   </div>
 </template>
 

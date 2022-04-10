@@ -23,7 +23,7 @@
     <div class="ops-container">
       <span v-if="!isAuthor">
         <a-avatar
-          :size="24"
+          :size="36"
           class="avatar"
           :src="state.author && state.author.avatarUrl"
         ></a-avatar>
@@ -237,7 +237,8 @@ export default defineComponent({
     .ops-area {
       float: right;
       :deep(.anticon) {
-        line-height: 24px;
+        font-size: 16px;
+        line-height: 36px;
         opacity: 0.5;
       }
       .red {

@@ -82,7 +82,6 @@ export default defineComponent({
           formData.append("lbIds", id);
         });
         state.authorArray = await service.post(urls.getAuthor, formData);
-        console.log(57, state.authorArray);
       }
     };
     const goMyLibrary = (id: number) => {
