@@ -1,14 +1,39 @@
 <template>
   <div class="main-card">
     <div class="manager">
-      <avatar-card></avatar-card>
-      <avatar-card></avatar-card>
-      <a-button class="btn-add">
-        <template #icon><PlusOutlined class="icon-add" /></template>
-      </a-button>
+      <div class="avatar-container">
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+        <avatar-card></avatar-card>
+      </div>
+    </div>
+    <div class="performance-container">
+      <div class="performance-title">Basic Data</div>
+      <div class="performance-card-container">
+        <performance-card
+          title="VIEWS"
+          number="667,766"
+          :index="0"
+        ></performance-card>
+        <performance-card
+          title="USER"
+          number="667,766"
+          :index="1"
+        ></performance-card>
+        <performance-card
+          title="IMAGES"
+          number="667,766"
+          :index="2"
+        ></performance-card>
+      </div>
     </div>
     <div class="analytics-container">
-      <div class="analytics-title">各个月份访问人数</div>
+      <div class="analytics-title">Views Line</div>
       <div class="analytics-chart-one">
         <a-popover
           :getPopupContainer="(triggerNode) => triggerNode.parentNode"
@@ -34,21 +59,13 @@
         />
       </div>
     </div>
-    <div class="performance-container">
-      <div class="performance-title">网站基本数据</div>
-      <div class="performance-card-container">
-        <performance-card title="VIEWS" number="667,766"></performance-card>
-        <performance-card title="USER" number="667,766"></performance-card>
-        <performance-card title="IMAGES" number="667,766"></performance-card>
-      </div>
-    </div>
     <div class="goal-pie-chart">
       <div class="goal-pie">
         <goals-card></goals-card>
-        <div class="pie-card-container">
+        <!-- <div class="pie-card-container">
           <pie-card></pie-card>
           <pie-card></pie-card>
-        </div>
+        </div> -->
       </div>
       <div class="chart">
         <chart-view
@@ -66,14 +83,12 @@
 <script lang="ts">
 import { defineComponent, reactive, toRefs, inject } from "vue";
 import PerformanceCard from "@/components/dashboard/PerformanceCard.vue";
-import AvatarCard from "@/components/dashboard/AvatarCard.vue";
 import GoalsCard from "@/components/dashboard/GoalsCard.vue";
-import PieCard from "@/components/dashboard/PieCard.vue";
-import { PlusOutlined } from "@ant-design/icons-vue";
+import AvatarCard from "@/components/dashboard/AvatarCard.vue";
 export default defineComponent({
   name: "MainArea",
   props: {},
-  components: { PerformanceCard, AvatarCard, PlusOutlined, GoalsCard, PieCard },
+  components: { PerformanceCard, GoalsCard, AvatarCard },
   setup() {
     const eChartFn = inject("eChartFn") as any;
     const state = reactive({
@@ -97,10 +112,13 @@ export default defineComponent({
   width: 696px;
   .manager {
     display: flex;
-    margin-bottom: 30px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 54px);
-    grid-gap: 24px 24px;
+    margin-top: 24px;
+    .avatar-container {
+      width: 696px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 54px);
+      grid-gap: 24px 24px;
+    }
     .btn-add {
       width: 54px;
       height: 54px;
@@ -111,6 +129,7 @@ export default defineComponent({
     }
   }
   .performance-container {
+    margin-top: 24px;
     width: 696px;
     height: 115px;
     display: flex;
@@ -125,13 +144,11 @@ export default defineComponent({
     }
   }
   .analytics-container {
+    margin-top: 24px;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0px 34px 68px rgba(13, 46, 97, 0.05);
-    border-radius: 15px;
-    margin-top: 36px;
     width: 696px;
     .analytics-title {
-      padding: 20px 0 0 20px;
       .title();
     }
     .analytics-chart-one {
@@ -161,7 +178,7 @@ export default defineComponent({
     }
   }
   .goal-pie-chart {
-    margin-top: 20px;
+    margin-top: 24px;
     display: flex;
     justify-content: space-between;
     .goal-pie {

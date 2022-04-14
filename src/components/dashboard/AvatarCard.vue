@@ -1,7 +1,6 @@
 <template>
   <div class="avatar-card">
-    <a-avatar shape="square" :size="54"></a-avatar>
-    <p class="name">passion</p>
+    <a-avatar shape="square" :size="38" class="avatar"></a-avatar>
   </div>
 </template>
 
@@ -17,13 +16,15 @@ export default defineComponent({
 
 <style scoped lang="less">
 .avatar-card {
-  width: 54px;
-  height: 74px;
-  text-align: center;
-  .name {
-    color: rgba(112, 122, 137, 1);
-    font-size: 10px;
-    word-break: break-all;
+  width: 50px;
+  height: 50px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .avatar {
+    border-radius: 13px;
   }
 }
 </style>

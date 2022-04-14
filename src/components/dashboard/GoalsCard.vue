@@ -2,11 +2,32 @@
   <div class="goal-card">
     <div class="top">
       <svg-icon iconClass="goal" class="goal"></svg-icon>
-      <span class="goal-text">manage goals</span>
+      <span class="goal-text">change</span>
     </div>
-    <div class="goal-status">80.1k / 100k USER</div>
+    <div class="goal-status">Goals</div>
     <div class="goal-percentage">
-      <span>goals</span>
+      <span>80.5k/120k user</span>
+      <span>80%</span>
+    </div>
+    <div class="progress">
+      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+    </div>
+    <div class="goal-percentage">
+      <span>80.5k/120k user</span>
+      <span>80%</span>
+    </div>
+    <div class="progress">
+      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+    </div>
+    <div class="goal-percentage">
+      <span>80.5k/120k user</span>
+      <span>80%</span>
+    </div>
+    <div class="progress">
+      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+    </div>
+    <div class="goal-percentage">
+      <span>80.5k/120k user</span>
       <span>80%</span>
     </div>
     <div class="progress">
@@ -28,7 +49,7 @@ export default defineComponent({
 
 <style scoped lang="less">
 .goal-card {
-  height: 182px;
+  height: 383px;
   width: 279px;
   background-color: #fdf2ff;
   padding: 20px 20px;

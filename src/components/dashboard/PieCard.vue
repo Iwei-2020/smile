@@ -17,10 +17,11 @@ export default defineComponent({
 <style scoped lang="less">
 .pie-card {
   border-radius: 15px;
-  width: 136px;
-  height: 150px;
+  width: 181px;
+  height: 187px;
   background-image: url(../../assets/images/pie-card2.png);
-  box-shadow: 0px 34px 68px rgba(13, 46, 97, 0.05);
+  background-color: rgb(241, 249, 255);
+  border: 1px solid rgb(255, 247, 226);
   display: flex;
   flex-direction: column;
   align-items: center;
