@@ -5,7 +5,7 @@
         <svg-icon iconClass="notify" class="notify"></svg-icon>
       </div>
       <div class="ops-container">
-        <svg-icon iconClass="quit" class="notify"></svg-icon>
+        <svg-icon iconClass="quit" class="notify" @click="goHome"></svg-icon>
       </div>
     </div>
     <div class="pie-card-container">
@@ -51,15 +51,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive } from "vue";
 import PieCard from "@/components/dashboard/PieCard.vue";
 import MessageCard from "@/components/dashboard/MessageCard.vue";
 import SvgIcon from "../common/SvgIcon.vue";
+import { useRouter } from "vue-router";
+import service from "@/utils/https";
+import urls from "@/utils/urls";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "",
   props: {},
   components: { PieCard, MessageCard, SvgIcon },
+  setup() {
+    const router = useRouter();
+
+    const state = reactive({});
+    const goHome = () => {
+      router.push("/");
+    };
+
+    return { goHome };
+  },
 });
 </script>
 
@@ -72,7 +86,6 @@ export default defineComponent({
     height: 40px;
     display: flex;
     justify-content: flex-end;
-    padding-right: 36px;
     .ops-container {
       height: 36px;
       width: 36px;
@@ -82,6 +95,7 @@ export default defineComponent({
       display: flex;
       justify-content: center;
       align-items: center;
+      cursor: pointer;
       .notify {
         height: 24px;
         width: 24px;

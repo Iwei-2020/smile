@@ -16,18 +16,18 @@
       <div class="performance-title">Basic Data</div>
       <div class="performance-card-container">
         <performance-card
-          title="VIEWS"
-          number="667,766"
+          title="USER"
+          :number="baseData.userCount"
           :index="0"
         ></performance-card>
         <performance-card
-          title="USER"
-          number="667,766"
+          title="Library"
+          :number="baseData.libraryCount"
           :index="1"
         ></performance-card>
         <performance-card
           title="IMAGES"
-          number="667,766"
+          :number="baseData.imageCount"
           :index="2"
         ></performance-card>
       </div>
@@ -81,22 +81,37 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, inject } from "vue";
+import { defineComponent, reactive, toRefs, inject, onMounted } from "vue";
 import PerformanceCard from "@/components/dashboard/PerformanceCard.vue";
 import GoalsCard from "@/components/dashboard/GoalsCard.vue";
 import AvatarCard from "@/components/dashboard/AvatarCard.vue";
+import service from "@/utils/https";
+import { useStore } from "vuex";
+import urls from "@/utils/urls";
 export default defineComponent({
   name: "MainArea",
   props: {},
   components: { PerformanceCard, GoalsCard, AvatarCard },
   setup() {
     const eChartFn = inject("eChartFn") as any;
+    const store = useStore();
     const state = reactive({
       chartOption: {},
       pieOption: {},
+      baseData: {
+        libraryCount: undefined,
+        imageCount: undefined,
+        userCount: undefined,
+      },
     });
     state.chartOption = eChartFn().getLineOption();
     state.pieOption = eChartFn().getPieOption();
+    const getBaseData = async (): Promise<void> => {
+      state.baseData = await service.get(
+        `${urls.getBaseData}/${store.getters.getUser.id}`
+      );
+    };
+    onMounted(getBaseData);
     return { ...toRefs(state) };
   },
 });

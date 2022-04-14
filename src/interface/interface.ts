@@ -3,11 +3,14 @@ export interface User {
   username?: string;
   phone?: string;
   certificate?: string;
+  userRole?: number;
   gender?: number;
   birthday?: Date;
   signature?: string;
   avatarUrl?: string;
   likedCount?: 0;
+  likeLib?: string;
+  starLib?: string;
 }
 
 export interface Library {

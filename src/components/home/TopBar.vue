@@ -60,6 +60,14 @@
                   <span>作品中心</span>
                 </router-link>
               </div>
+              <div
+                class="pointer m-bottom10"
+                v-if="this.$store.getters.getUser.userRole >= 3"
+              >
+                <router-link to="/dashboard">
+                  <span>Dashboard</span>
+                </router-link>
+              </div>
               <div class="pointer">
                 <span @click="logout">退出</span>
               </div>

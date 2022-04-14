@@ -14,11 +14,14 @@ const userInit = () => {
     username: "",
     phone: "",
     certificate: "",
+    userRole: undefined,
     gender: undefined,
     birthday: undefined,
     signature: "",
     avatarUrl: "",
     likedCount: undefined,
+    likeLib: "",
+    starLib: "",
   } as User;
 };
 

@@ -8,6 +8,7 @@ export const urls: any = {
   changeAvatar: "user/avatar",
   getDefaultAvatar: "user/getDefaultAvatar",
   getAuthor: "user/author",
+  getBaseData: "user/baseData",
 
   addLibrary: "library/add",
   getLibrary: "library/get",
