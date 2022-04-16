@@ -1,15 +1,20 @@
 <template>
   <div class="avatar-card">
-    <a-avatar shape="square" :size="38" class="avatar"></a-avatar>
+    <a-avatar shape="square" :size="38" class="avatar" :src="source"></a-avatar>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "",
-  props: {},
+  props: {
+    source: {
+      type: String,
+      required: true,
+    },
+  },
   components: {},
 });
 </script>
@@ -25,6 +30,7 @@ export default defineComponent({
   align-items: center;
   .avatar {
     border-radius: 13px;
+    background-color: #f5dbf9;
   }
 }
 </style>

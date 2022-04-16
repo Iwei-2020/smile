@@ -1,18 +1,16 @@
 const getPieOption = (): any => {
   const option = {
-    // title: {
-    //   text: "Nightingale Chart",
-    //   subtext: "Fake Data",
-    //   left: "center",
-    // },
+    title: {
+      text: "用户分布",
+      left: "center",
+      top: 18,
+    },
     legend: {
-      orient: "vertical",
-      right: 80,
-      top: "middle",
+      top: "bottom",
     },
     tooltip: {
-      // trigger: "item",
-      // formatter: "{a} <br/>{b} : {c} ({d}%)",
+      trigger: "item",
+      formatter: "{a} <br/> {b} : {c} ({d}%)",
     },
     toolbox: {
       show: true,
@@ -28,10 +26,10 @@ const getPieOption = (): any => {
     },
     series: [
       {
-        name: "Radius Mode",
+        name: "用户类型",
         type: "pie",
         radius: [20, 140],
-        center: ["25%", "50%"],
+        // center: ["25%", "50%"],
         roseType: "radius",
         itemStyle: {
           borderRadius: 5,
@@ -39,16 +37,7 @@ const getPieOption = (): any => {
         label: {
           show: false,
         },
-        data: [
-          { value: 40, name: "rose 1" },
-          { value: 33, name: "rose 2" },
-          { value: 28, name: "rose 3" },
-          { value: 22, name: "rose 4" },
-          { value: 20, name: "rose 5" },
-          { value: 15, name: "rose 6" },
-          { value: 12, name: "rose 7" },
-          { value: 10, name: "rose 8" },
-        ],
+        data: [],
       },
     ],
   };

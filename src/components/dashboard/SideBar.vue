@@ -4,7 +4,12 @@
     <br />
     <span class="sub">It's time to smile</span>
     <div class="avatar-container">
-      <a-avatar :size="50" shape="square" style="flex-shrink: 0"></a-avatar>
+      <a-avatar
+        :size="50"
+        shape="square"
+        style="flex-shrink: 0"
+        :src="this.$store.getters.getUser.avatarUrl"
+      ></a-avatar>
       <span class="hi">Hi Passion</span>
     </div>
     <div class="side-menu">

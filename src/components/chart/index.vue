@@ -101,7 +101,6 @@ export default defineComponent({
     watch(
       chartOption,
       (newValue) => {
-        console.log(102, newValue);
         setOptions(newValue);
       },
       { deep: true }

@@ -2,14 +2,11 @@
   <div class="main-card">
     <div class="manager">
       <div class="avatar-container">
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
-        <avatar-card></avatar-card>
+        <avatar-card
+          v-for="(user, index) in userAdmin"
+          :key="index"
+          :source="user.avatarUrl"
+        ></avatar-card>
       </div>
     </div>
     <div class="performance-container">
@@ -88,6 +85,7 @@ import AvatarCard from "@/components/dashboard/AvatarCard.vue";
 import service from "@/utils/https";
 import { useStore } from "vuex";
 import urls from "@/utils/urls";
+import emitter from "@/utils/mybus";
 export default defineComponent({
   name: "MainArea",
   props: {},
@@ -97,12 +95,13 @@ export default defineComponent({
     const store = useStore();
     const state = reactive({
       chartOption: {} as any,
-      pieOption: {},
+      pieOption: {} as any,
       baseData: {
         libraryCount: undefined,
         imageCount: undefined,
         userCount: undefined,
       },
+      userAdmin: [],
     });
     state.chartOption = eChartFn().getLineOption();
     state.pieOption = eChartFn().getPieOption();
@@ -111,16 +110,22 @@ export default defineComponent({
       data = await service.get(
         `${urls.getBaseData}/${store.getters.getUser.id}`
       );
-      let { uv, baseData } = data;
+      let { uv, baseData, userAdmin, userDistribution } = data;
       state.baseData = baseData;
       let chartLabel = Object.keys(uv);
       let chartData: any = [];
       chartLabel.forEach((key) => {
         chartData.push(uv[key]);
       });
-      console.log(121);
       state.chartOption.xAxis.data = chartLabel;
       state.chartOption.series[0].data = chartData;
+      state.pieOption.series[0].data = userDistribution;
+      let index = userAdmin.findIndex((item: any) => {
+        return item.id === store.getters.getUser.id;
+      });
+      userAdmin.splice(index, 1);
+      state.userAdmin = userAdmin;
+      emitter.emit("getUserAdmin", userAdmin);
     };
     onMounted(getBaseData);
     return { ...toRefs(state) };

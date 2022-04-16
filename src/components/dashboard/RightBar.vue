@@ -24,19 +24,30 @@
     <div class="chat-card">
       <div class="top">
         <span class="title">Chat</span>
-        <div>
-          <svg-icon iconClass="down" class="down"></svg-icon>
-          <a-avatar :size="32" style="margin: 0 10px 0 10px"></a-avatar>
-          <a-avatar :size="32" style="margin-right: 24px"></a-avatar>
+        <div v-show="chating" class="right">
+          <a-avatar :size="32"></a-avatar>
+          <a-avatar :size="32" style="margin: 0 10px"></a-avatar>
+          <svg-icon
+            iconClass="close"
+            class="close"
+            @click="closeChating"
+          ></svg-icon>
         </div>
       </div>
-      <div class="message-area">
+      <div class="message-area" v-show="chating">
         <message-card type="receive"></message-card>
         <message-card style="margin-top: 20px"></message-card>
         <message-card style="margin-top: 20px"></message-card>
       </div>
-      <div class="message-sent">
-        <a-input class="message-input" value="好了你明天不用来上班了">
+      <div class="chat-with-list" v-show="!chating">
+        <chat-item
+          v-for="(user, index) in userAdmin"
+          :key="index"
+          @changeChating="changeChating"
+        ></chat-item>
+      </div>
+      <div class="message-sent" v-show="chating">
+        <a-input class="message-input" v-model:value="messageSend">
           <template #prefix>
             <svg-icon iconClass="link" class="link base-icon"></svg-icon>
           </template>
@@ -51,23 +62,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, toRefs, onMounted, onUnmounted } from "vue";
 import NewCard from "@/components/dashboard/NewCard.vue";
 import MessageCard from "@/components/dashboard/MessageCard.vue";
 import SvgIcon from "../common/SvgIcon.vue";
 import { useRouter } from "vue-router";
+import ChatItem from "@/components/dashboard/ChatItem.vue";
+import emitter from "@/utils/mybus";
 export default defineComponent({
   name: "",
   props: {},
-  components: { NewCard, MessageCard, SvgIcon },
+  components: { NewCard, SvgIcon, ChatItem, MessageCard },
   setup() {
     const router = useRouter();
-    const state = reactive({});
+    const state = reactive({
+      chating: false,
+      userAdmin: [],
+      messageSend: "",
+    });
     const goHome = () => {
       router.push("/");
     };
-
-    return { goHome };
+    const changeChating = () => {
+      console.log(87);
+      state.chating = true;
+    };
+    const closeChating = () => {
+      state.chating = false;
+    };
+    const getUserAdmin = (data: any) => {
+      state.userAdmin = data;
+    };
+    onMounted(() => {
+      emitter.on("getUserAdmin", getUserAdmin);
+    });
+    onUnmounted(() => {
+      emitter.off("getUserAdmin");
+    });
+    return { goHome, ...toRefs(state), changeChating, closeChating };
   },
 });
 </script>
@@ -135,6 +167,7 @@ export default defineComponent({
     border: 1px solid rgb(253, 189, 100);
     padding: 12px 0 0 24px;
     .top {
+      padding-right: 24px;
       display: flex;
       justify-content: space-between;
       .title {
@@ -142,10 +175,29 @@ export default defineComponent({
         font-weight: bolder;
         line-height: 32px;
       }
+      .right {
+        display: flex;
+        align-items: center;
+        .close {
+          height: 24px;
+          width: 24px;
+          opacity: 0.6;
+          cursor: pointer;
+        }
+      }
     }
     .message-area {
       margin-top: 20px;
       height: 300px;
+      padding-right: 24px;
+      overflow-y: scroll;
+      &::-webkit-scrollbar {
+        width: 0px;
+      }
+    }
+    .chat-with-list {
+      margin-top: 20px;
+      height: 350px;
       padding-right: 24px;
       overflow-y: scroll;
       &::-webkit-scrollbar {

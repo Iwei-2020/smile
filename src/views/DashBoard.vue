@@ -7,8 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, ref, watch } from "vue";
-import type { MenuProps } from "ant-design-vue";
+import { defineComponent } from "vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
 import MainArea from "@/components/dashboard/MainArea.vue";
 import RightBar from "@/components/dashboard/RightBar.vue";
@@ -27,7 +26,6 @@ export default defineComponent({
   width: 1440px;
   min-height: 990px;
   margin: 0 auto;
-  // border: 1px solid pink;
   display: flex;
   justify-content: space-between;
 }
