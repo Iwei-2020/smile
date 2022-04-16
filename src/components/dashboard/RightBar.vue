@@ -8,9 +8,9 @@
         <svg-icon iconClass="quit" class="notify" @click="goHome"></svg-icon>
       </div>
     </div>
-    <div class="pie-card-container">
-      <pie-card class="pie-card" style="margin-right: 36px"></pie-card>
-      <pie-card class="pie-card"></pie-card>
+    <div class="new-card-container">
+      <new-card style="margin-right: 36px" :index="0"></new-card>
+      <new-card :index="1"></new-card>
     </div>
     <div class="income-card">
       <img src="../../assets/images/rocket.png" class="rocket" />
@@ -52,21 +52,16 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import PieCard from "@/components/dashboard/PieCard.vue";
+import NewCard from "@/components/dashboard/NewCard.vue";
 import MessageCard from "@/components/dashboard/MessageCard.vue";
 import SvgIcon from "../common/SvgIcon.vue";
 import { useRouter } from "vue-router";
-import service from "@/utils/https";
-import urls from "@/utils/urls";
-import { useStore } from "vuex";
-
 export default defineComponent({
   name: "",
   props: {},
-  components: { PieCard, MessageCard, SvgIcon },
+  components: { NewCard, MessageCard, SvgIcon },
   setup() {
     const router = useRouter();
-
     const state = reactive({});
     const goHome = () => {
       router.push("/");
@@ -102,7 +97,7 @@ export default defineComponent({
       }
     }
   }
-  .pie-card-container {
+  .new-card-container {
     display: flex;
     margin-top: 24px;
   }

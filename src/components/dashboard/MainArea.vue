@@ -96,7 +96,7 @@ export default defineComponent({
     const eChartFn = inject("eChartFn") as any;
     const store = useStore();
     const state = reactive({
-      chartOption: {},
+      chartOption: {} as any,
       pieOption: {},
       baseData: {
         libraryCount: undefined,
@@ -107,9 +107,20 @@ export default defineComponent({
     state.chartOption = eChartFn().getLineOption();
     state.pieOption = eChartFn().getPieOption();
     const getBaseData = async (): Promise<void> => {
-      state.baseData = await service.get(
+      let data: any;
+      data = await service.get(
         `${urls.getBaseData}/${store.getters.getUser.id}`
       );
+      let { uv, baseData } = data;
+      state.baseData = baseData;
+      let chartLabel = Object.keys(uv);
+      let chartData: any = [];
+      chartLabel.forEach((key) => {
+        chartData.push(uv[key]);
+      });
+      console.log(121);
+      state.chartOption.xAxis.data = chartLabel;
+      state.chartOption.series[0].data = chartData;
     };
     onMounted(getBaseData);
     return { ...toRefs(state) };

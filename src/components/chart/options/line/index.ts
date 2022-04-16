@@ -31,7 +31,7 @@ const getLineOption = (): any => {
     },
     series: [
       {
-        data: [100, 200, 300, 102, 104, 108, 66, 136, 144, 80, 76, 320],
+        data: [],
         type: "line",
       },
     ],

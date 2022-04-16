@@ -1,18 +1,12 @@
 <template>
-  <div
-    class="performance-card"
-    :style="{
-      'background-image': `url(${bgImageArray[index]})`,
-    }"
-  >
+  <div class="performance-card" :style="performanceStyle">
     <span class="key">{{ title }}</span>
     <span class="number">{{ number }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { number } from "echarts/core";
-import { defineComponent, reactive, toRefs } from "vue";
+import { computed, defineComponent, reactive } from "vue";
 
 export default defineComponent({
   name: "",
@@ -27,19 +21,24 @@ export default defineComponent({
     },
     index: {
       type: Number,
+      default: 0,
     },
   },
   components: {},
-  setup() {
+  setup(props) {
     const state = reactive({
-      bgImageArray: [] as string[],
+      bgImageArray: [
+        require("@/assets/images/performance-bg1.png"),
+        require("@/assets/images/performance-bg2.png"),
+        require("@/assets/images/performance-bg3.png"),
+      ],
     });
-    for (let index = 1; index < 4; index++) {
-      state.bgImageArray.push(
-        require(`@/assets/images/performance-bg${index}.png`)
-      );
-    }
-    return { ...toRefs(state) };
+    const performanceStyle = computed(() => {
+      return {
+        backgroundImage: `url(${state.bgImageArray[props.index]})`,
+      };
+    });
+    return { performanceStyle };
   },
 });
 </script>

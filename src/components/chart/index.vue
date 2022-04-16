@@ -98,9 +98,14 @@ export default defineComponent({
     const clearChart = () => {
       state.chart && state.chart.clear();
     };
-    watch(chartOption, (newValue) => {
-      setOptions(newValue);
-    });
+    watch(
+      chartOption,
+      (newValue) => {
+        console.log(102, newValue);
+        setOptions(newValue);
+      },
+      { deep: true }
+    );
     onMounted(() => {
       initChart();
       if (autoResize.value) {

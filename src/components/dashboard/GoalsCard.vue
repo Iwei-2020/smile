@@ -17,21 +17,21 @@
       <span>80%</span>
     </div>
     <div class="progress">
-      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+      <a-progress :percent="80" :showInfo="false" strokeColor="#5c7bd9" />
     </div>
     <div class="goal-percentage">
       <span>80.5k/120k user</span>
       <span>80%</span>
     </div>
     <div class="progress">
-      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+      <a-progress :percent="80" :showInfo="false" strokeColor="#fc8452" />
     </div>
     <div class="goal-percentage">
       <span>80.5k/120k user</span>
       <span>80%</span>
     </div>
     <div class="progress">
-      <a-progress :percent="80" :showInfo="false" strokeColor="#503094" />
+      <a-progress :percent="80" :showInfo="false" strokeColor="#f76b6b" />
     </div>
   </div>
 </template>

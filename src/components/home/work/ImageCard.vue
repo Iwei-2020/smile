@@ -4,7 +4,7 @@
       <img :src="image.url" class="image" />
     </div>
     <span class="icon-name">
-      <span>{{ image.name }}</span>
+      <span>{{ image.imgName }}</span>
     </span>
     <div class="icon-cover">
       <DownloadOutlined @click="download" class="icon" />
