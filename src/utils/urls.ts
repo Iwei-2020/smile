@@ -8,6 +8,7 @@ export const urls: any = {
   changeAvatar: "user/avatar",
   getDefaultAvatar: "user/getDefaultAvatar",
   getAuthor: "user/author",
+  getChat: "user/getChat",
 
   addLibrary: "library/add",
   getLibrary: "library/get",
@@ -17,27 +18,9 @@ export const urls: any = {
   likeOrStar: "library/likeOrStar",
 
   getImage: "image/get",
-
   getBaseData: "base/baseData",
 
-  likeArticle: "likeArticle",
-  getArticleDetail: "getArticleDetail",
-
-  addMessage: "addMessage",
-  getMessageList: "getMessageList",
-  getMessageDetail: "getMessageDetail",
-
-  getLinkList: "getLinkList",
-
-  getTagList: "getTagList",
-
-  getCategoryList: "getCategoryList",
-
-  getTimeAxisList: "getTimeAxisList",
-  getTimeAxisDetail: "getTimeAxisDetail",
-
-  getProjectList: "getProjectList",
-  getProjectDetail: "getProjectDetail",
+  socketUrl: "ws://localhost:3333/chat",
 };
 
 export default urls;

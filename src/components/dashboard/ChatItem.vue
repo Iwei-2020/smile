@@ -1,10 +1,10 @@
 <template>
   <div class="chat-item">
     <div class="left">
-      <a-avatar :size="40" class="avatar"></a-avatar>
+      <a-avatar :size="40" class="avatar" :src="user.avatarUrl"></a-avatar>
       <div class="info">
-        <span class="title">passion </span>
-        <span class="sub">18379995325</span>
+        <span class="title">{{ user.username }}</span>
+        <span class="sub">{{ user.phone }}</span>
       </div>
     </div>
     <svg-icon iconClass="chat" class="chat" @click="changeChating"></svg-icon>
@@ -17,14 +17,18 @@ import SvgIcon from "../common/SvgIcon.vue";
 
 export default defineComponent({
   name: "",
-  props: {},
+  props: {
+    user: {
+      type: Object,
+      required: true,
+    },
+  },
   components: { SvgIcon },
   emits: ["changeChating"],
   setup(props, context) {
     const state = reactive({});
     const changeChating = () => {
-      console.log(26);
-      context.emit("changeChating");
+      context.emit("changeChating", props.user);
     };
     return { ...toRefs(state), changeChating };
   },

@@ -34,20 +34,32 @@
           ></svg-icon>
         </div>
       </div>
-      <div class="message-area" v-show="chating">
-        <message-card type="receive"></message-card>
-        <message-card style="margin-top: 20px"></message-card>
-        <message-card style="margin-top: 20px"></message-card>
+      <div class="message-area" v-show="chating" ref="scroll">
+        <div>
+          <message-card
+            v-for="(msg, index) in messageArray"
+            :key="index"
+            :message="msg"
+            :type="
+              this.$store.getters.getUser.id === msg.fromId ? 'send' : 'receive'
+            "
+          ></message-card>
+        </div>
       </div>
       <div class="chat-with-list" v-show="!chating">
         <chat-item
           v-for="(user, index) in userAdmin"
           :key="index"
           @changeChating="changeChating"
+          :user="user"
         ></chat-item>
       </div>
       <div class="message-sent" v-show="chating">
-        <a-input class="message-input" v-model:value="messageSend">
+        <a-input
+          class="message-input"
+          v-model:value="messageSend"
+          @pressEnter="sendMsg"
+        >
           <template #prefix>
             <svg-icon iconClass="link" class="link base-icon"></svg-icon>
           </template>
@@ -62,30 +74,55 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs, onMounted, onUnmounted } from "vue";
+import {
+  defineComponent,
+  reactive,
+  toRefs,
+  onMounted,
+  onUnmounted,
+  ref,
+  nextTick,
+} from "vue";
 import NewCard from "@/components/dashboard/NewCard.vue";
 import MessageCard from "@/components/dashboard/MessageCard.vue";
 import SvgIcon from "../common/SvgIcon.vue";
 import { useRouter } from "vue-router";
 import ChatItem from "@/components/dashboard/ChatItem.vue";
 import emitter from "@/utils/mybus";
+import service from "@/utils/https";
+import urls from "@/utils/urls";
+import { useStore } from "vuex";
+import { message } from "ant-design-vue";
 export default defineComponent({
   name: "",
   props: {},
   components: { NewCard, SvgIcon, ChatItem, MessageCard },
   setup() {
     const router = useRouter();
+    const store = useStore();
+    const scroll: any = ref(null);
     const state = reactive({
       chating: false,
       userAdmin: [],
       messageSend: "",
+      chatWith: {} as any,
+      messageArray: [] as any,
+      onlineCount: 0,
+      websocket: null as any,
     });
     const goHome = () => {
       router.push("/");
     };
-    const changeChating = () => {
-      console.log(87);
+    const changeChating = (user: any) => {
       state.chating = true;
+      state.chatWith = user;
+      let formData = new FormData();
+      formData.append("fromId", store.getters.getUser.id);
+      formData.append("toId", state.chatWith.id);
+      service.post(urls.getChat, formData).then((res) => {
+        state.messageArray = res;
+        scrollBottom();
+      });
     };
     const closeChating = () => {
       state.chating = false;
@@ -93,13 +130,61 @@ export default defineComponent({
     const getUserAdmin = (data: any) => {
       state.userAdmin = data;
     };
+    const scrollBottom = () => {
+      nextTick(() => {
+        scroll.value.scrollTop = scroll.value.scrollHeight;
+      });
+    };
+    const sendMsg = async (): Promise<void> => {
+      if (state.messageSend === "") return;
+      let sendMsg = {
+        fromId: store.getters.getUser.id,
+        toId: state.chatWith.id,
+        content: state.messageSend,
+      };
+      state.websocket.send(JSON.stringify(sendMsg));
+      scrollBottom();
+    };
+    const socketInit = () => {
+      const websocket = new WebSocket(
+        `${urls.socketUrl}/${store.getters.getUser.id}`
+      );
+      // 收到服务器发过来的消息
+      websocket.onmessage = (msg) => {
+        const msgJson = JSON.parse(msg.data);
+        if (msgJson.type === 0) {
+          state.onlineCount = msgJson.message;
+        } else if (msgJson.type === 1) {
+          state.messageArray.push(msgJson.message);
+        }
+      };
+      websocket.onopen = () => {
+        message.success("websocket open");
+      };
+      websocket.close = () => {
+        message.success("websocket close");
+      };
+      websocket.onerror = () => {
+        message.error("error");
+      };
+      state.websocket = websocket;
+    };
     onMounted(() => {
       emitter.on("getUserAdmin", getUserAdmin);
+      socketInit();
     });
     onUnmounted(() => {
+      state.websocket.close();
       emitter.off("getUserAdmin");
     });
-    return { goHome, ...toRefs(state), changeChating, closeChating };
+    return {
+      goHome,
+      ...toRefs(state),
+      changeChating,
+      closeChating,
+      sendMsg,
+      scroll,
+    };
   },
 });
 </script>

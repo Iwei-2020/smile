@@ -1,17 +1,17 @@
 <template>
   <div class="message-card">
-    <p class="time">2022/04/12 3:01</p>
+    <p class="time">{{ chatTime }}</p>
     <div class="message-container" :style="messageStyle">
       <div :class="messageClass">
-        <span>小刘, 今天的活干的怎么样了。完成了跟我报告好吗?</span>
+        <span>{{ msg.content }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, toRefs } from "vue";
-
+import { computed, defineComponent, reactive, toRefs, watch } from "vue";
+import moment from "moment";
 export default defineComponent({
   name: "",
   props: {
@@ -19,11 +19,28 @@ export default defineComponent({
       type: String,
       default: "send",
     },
+    message: {
+      type: String,
+      required: true,
+    },
   },
   components: {},
   setup(props) {
+    let { message }: any = toRefs(props);
     const state = reactive({
       isSend: props.type === "send",
+      msg: props.message as any,
+    });
+    const chatTime = computed(() => {
+      let format = "YYYY-MM-DD HH:mm:ss";
+      let { chatTime, chatInterval } = message.value;
+      if (chatInterval < 5 && chatInterval != -1) {
+        return null;
+      }
+      let timeStr = moment(chatTime, format).format(format);
+      let split = timeStr.split(" ");
+      const now = moment().format("YYYY-MM-DD");
+      return split[0] === now ? split[1] : timeStr;
     });
     const messageClass = computed(() => {
       return { "send-message": state.isSend, "receive-message": !state.isSend };
@@ -34,7 +51,10 @@ export default defineComponent({
         justifyContent: state.isSend ? "flex-end" : "flex-start",
       };
     });
-    return { ...toRefs(state), messageClass, messageStyle };
+    watch(message, (newValue) => {
+      state.msg = newValue;
+    });
+    return { ...toRefs(state), messageClass, messageStyle, chatTime };
   },
 });
 </script>
@@ -46,7 +66,7 @@ export default defineComponent({
     color: rgb(175, 188, 205);
   }
   .base-message {
-    width: 260px;
+    max-width: 260px;
     padding: 16px 12px;
   }
   .message-container {

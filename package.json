@@ -12,6 +12,7 @@
     "core-js": "^3.6.5",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
+    "moment": "^2.29.3",
     "socket.io": "^4.4.1",
     "vue": "^3.0.0",
     "vue-class-component": "^8.0.0-0",
@@ -41,5 +42,9 @@
     "prettier": "^2.2.1",
     "svg-sprite-loader": "^6.0.11",
     "typescript": "~4.1.5"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.6",
+    "utf-8-validate": "^5.0.9"
   }
 }
