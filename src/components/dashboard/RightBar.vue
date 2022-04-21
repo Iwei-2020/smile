@@ -92,7 +92,7 @@ import emitter from "@/utils/mybus";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
 import { useStore } from "vuex";
-import { message } from "ant-design-vue";
+// import { message } from "ant-design-vue";
 export default defineComponent({
   name: "",
   props: {},
@@ -143,30 +143,27 @@ export default defineComponent({
         content: state.messageSend,
       };
       state.websocket.send(JSON.stringify(sendMsg));
-      scrollBottom();
     };
     const socketInit = () => {
       const websocket = new WebSocket(
         `${urls.socketUrl}/${store.getters.getUser.id}`
       );
       // 收到服务器发过来的消息
-      websocket.onmessage = (msg) => {
-        const msgJson = JSON.parse(msg.data);
-        if (msgJson.type === 0) {
-          state.onlineCount = msgJson.message;
-        } else if (msgJson.type === 1) {
-          state.messageArray.push(msgJson.message);
-        }
+      websocket.onmessage = (msg: any) => {
+        let message = JSON.parse(msg.data);
+        state.messageArray.push(message);
+        state.messageSend = "";
+        scrollBottom();
       };
-      websocket.onopen = () => {
-        message.success("websocket open");
-      };
-      websocket.close = () => {
-        message.success("websocket close");
-      };
-      websocket.onerror = () => {
-        message.error("error");
-      };
+      // websocket.onopen = () => {
+      //   message.success("websocket open");
+      // };
+      // websocket.close = () => {
+      //   message.success("websocket close");
+      // };
+      // websocket.onerror = () => {
+      //   message.error("error");
+      // };
       state.websocket = websocket;
     };
     onMounted(() => {
@@ -202,7 +199,6 @@ export default defineComponent({
       height: 36px;
       width: 36px;
       border: 1px solid rgba(239, 238, 238, 1);
-      box-shadow: 0px 1.85px 6.3px rgba(41, 72, 152, 0.01);
       border-radius: 10px;
       display: flex;
       justify-content: center;
@@ -247,9 +243,8 @@ export default defineComponent({
     margin-top: 24px;
     height: 448px;
     width: 400px;
-    background-color: #ffffff;
+    background-color: #f0f0f1;
     border-radius: 15px;
-    border: 1px solid rgb(253, 189, 100);
     padding: 12px 0 0 24px;
     .top {
       padding-right: 24px;

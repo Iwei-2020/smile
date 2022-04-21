@@ -32,15 +32,13 @@ export default defineComponent({
       msg: props.message as any,
     });
     const chatTime = computed(() => {
-      let format = "YYYY-MM-DD HH:mm:ss";
       let { chatTime, chatInterval } = message.value;
       if (chatInterval < 5 && chatInterval != -1) {
         return null;
       }
-      let timeStr = moment(chatTime, format).format(format);
-      let split = timeStr.split(" ");
+      let split = chatTime.split(" ");
       const now = moment().format("YYYY-MM-DD");
-      return split[0] === now ? split[1] : timeStr;
+      return split[0] === now ? split[1] : chatTime;
     });
     const messageClass = computed(() => {
       return { "send-message": state.isSend, "receive-message": !state.isSend };

@@ -9,6 +9,7 @@ import SvgIcon from "@/components/common/SvgIcon.vue";
 import "@/assets/svg";
 import eChartFn from "@/components/chart/index";
 import ChartPanel from "@/components/chart/index.vue";
+import "default-passive-events";
 
 const app = createApp(App);
 app.use(router).use(store);

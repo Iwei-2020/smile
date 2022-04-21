@@ -21,6 +21,8 @@ export const urls: any = {
   getBaseData: "base/baseData",
 
   socketUrl: "ws://localhost:3333/chat",
+
+  uv: "base/uv",
 };
 
 export default urls;

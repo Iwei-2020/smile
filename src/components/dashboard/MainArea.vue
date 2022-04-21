@@ -97,9 +97,9 @@ export default defineComponent({
       chartOption: {} as any,
       pieOption: {} as any,
       baseData: {
-        libraryCount: undefined,
-        imageCount: undefined,
-        userCount: undefined,
+        libraryCount: 0,
+        imageCount: 0,
+        userCount: 0,
       },
       userAdmin: [],
     });

@@ -18,25 +18,25 @@
           <template #icon>
             <UserOutlined />
           </template>
-          <router-link to="info"> 我的信息 </router-link>
+          <span> 我的信息 </span>
         </a-menu-item>
         <a-menu-item key="avatar">
           <template #icon>
             <SmileOutlined />
           </template>
-          <router-link to="avatar"> 我的头像 </router-link>
+          <span> 我的头像 </span>
         </a-menu-item>
         <a-menu-item key="collection">
           <template #icon>
             <TagsOutlined />
           </template>
-          <router-link to="collection"> 我的收藏 </router-link>
+          <span> 我的收藏 </span>
         </a-menu-item>
         <a-menu-item key="security">
           <template #icon>
             <SafetyCertificateOutlined />
           </template>
-          <router-link to="security"> 安全中心 </router-link>
+          <span> 安全中心 </span>
         </a-menu-item>
       </a-menu>
       <a-card class="card">
@@ -84,6 +84,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const handleMenuSelect = (item: any) => {
+      console.log(87);
       const { key } = item;
       state.current.pop();
       state.current.push(key);

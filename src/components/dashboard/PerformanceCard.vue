@@ -16,7 +16,7 @@ export default defineComponent({
       required: true,
     },
     number: {
-      type: String,
+      type: Number,
       required: true,
     },
     index: {

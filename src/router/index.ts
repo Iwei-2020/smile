@@ -1,6 +1,8 @@
+import { urls } from "./../utils/urls";
 import { message } from "ant-design-vue";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import store from "@/store";
+import service from "@/utils/https";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -10,6 +12,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: "",
         component: () => import("@/views/home/HomeMain.vue"),
+        meta: { uv: true },
       },
       {
         path: "user",
@@ -67,14 +70,16 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  // 而不是去检查每条路由记录
-  // to.matched.some(record => record.meta.requiresAuth)
+  const { requiresAuth, uv } = to.meta;
+  if (uv) {
+    // 此路由是否作为统计uv的依据
+    service.get(urls.uv);
+  }
   const token = localStorage.getItem("token");
-
   if (token) {
     await store.dispatch("getUser");
   }
-  if (to.meta.requiresAuth) {
+  if (requiresAuth) {
     // 此路由需要授权，请检查是否已登录
     // 如果没有，则重定向到登录页面
     if (store.state.user.id) {
