@@ -39,6 +39,7 @@
         <a-button type="primary" style="float: right" @click="sendCheckCode"
           >发送验证码</a-button
         >
+        <img :src="`http://127.0.0.1/user/kaptcha/1`" />
       </a-form-item>
       <a-form-item :colon="false" label=" " v-if="mode === 'login'">
         <a-checkbox>记住密码</a-checkbox>
