@@ -3,14 +3,14 @@
   <div class="library-container">
     <div class="wrapper">
       <source-card
-        v-for="(library, index) in librarys"
+        v-for="(library, index) in libraryImageVos"
         :isAuthor="false"
         :key="`home` + index"
         :library="library"
-        :images="state.imagesArray[index]"
-        :author="state.authorArray[index]"
-        :isLike="state.likeArray[index]"
-        :isStar="state.starArray[index]"
+        :images="imagesArray[index]"
+        :author="authorArray[index]"
+        :isLike="likeArray[index]"
+        :isStar="starArray[index]"
         @goMyLibrary="goMyLibrary"
         @changeLikeOrStar="changeLikeOrStar"
       ></source-card>
@@ -19,19 +19,18 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, toRefs, watch } from "vue";
+import { defineComponent, nextTick, reactive, toRefs, watch } from "vue";
 import SourceCard from "@/components/home/work/SourceCard.vue";
 import ModuleTitle from "@/components/home/main/ModuleTitle.vue";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
 import emitter from "@/utils/mybus";
 import { useRouter } from "vue-router";
-import { useStore } from "vuex";
 import { Library } from "@/interface/interface";
 
 export default defineComponent({
   props: {
-    librarys: {
+    libraryImageVos: {
       type: Array,
       required: true,
     },
@@ -47,49 +46,19 @@ export default defineComponent({
   components: { SourceCard, ModuleTitle },
   setup(props) {
     const state = reactive({
-      imagesArray: [],
-      authorArray: [],
+      imagesArray: [] as any,
+      authorArray: [] as any,
       likeArray: [] as any,
       starArray: [] as any,
     });
-    const { librarys }: any = toRefs(props);
+    const { libraryImageVos }: any = toRefs(props);
     const router = useRouter();
-    const store = useStore();
-    const lbIds = computed(() => {
-      return librarys.value.map((library: any) => library.lbId);
-    });
-    const getImages = async (): Promise<void> => {
-      if (librarys.value.length > 0) {
-        let formData = new FormData();
-        lbIds.value.forEach((id: any) => {
-          formData.append("lbIds", id);
-        });
-        formData.append("getAll", "false");
-        formData.append("userId", store.getters.getUser.id);
-        let { imagesArray, likeArray, starArray } = (await service.post(
-          urls.getImage,
-          formData
-        )) as any;
-        state.imagesArray = imagesArray;
-        state.likeArray = likeArray;
-        state.starArray = starArray;
-      }
-    };
-    const getAuthor = async (): Promise<void> => {
-      if (librarys.value.length > 0) {
-        let formData = new FormData();
-        lbIds.value.forEach((id: any) => {
-          formData.append("lbIds", id);
-        });
-        state.authorArray = await service.post(urls.getAuthor, formData);
-      }
-    };
     const goMyLibrary = (id: number) => {
       router.push(`/work/library/${id}`).then(() => {
-        let index = librarys.value.findIndex(
+        let index = libraryImageVos.value.findIndex(
           (library: any) => library.lbId === id
         );
-        emitter.emit("getLibrary", librarys.value[index]);
+        emitter.emit("getLibrary", libraryImageVos.value[index]);
         watchPlus(id);
       });
     };
@@ -99,7 +68,7 @@ export default defineComponent({
       service.post(urls.watchLibrary, formData);
     };
     const changeLikeOrStar = (data: any) => {
-      let index = librarys.value.findIndex(
+      let index = libraryImageVos.value.findIndex(
         (library: Library) => library.lbId === data.lbId
       );
       if (data.type === "star") {
@@ -108,11 +77,17 @@ export default defineComponent({
         state.likeArray[index] = !state.likeArray[index];
       }
     };
-    watch(librarys, () => {
-      getImages();
-      getAuthor();
+    watch(libraryImageVos, () => {
+      nextTick(() => {
+        libraryImageVos.value.forEach((libraryImageVo: any) => {
+          state.imagesArray.push(libraryImageVo.images);
+          state.authorArray.push(libraryImageVo.author);
+          state.likeArray.push(libraryImageVo.isLike);
+          state.starArray.push(libraryImageVo.isStar);
+        });
+      });
     });
-    return { state, goMyLibrary, changeLikeOrStar };
+    return { goMyLibrary, changeLikeOrStar, ...toRefs(state) };
   },
 });
 </script>

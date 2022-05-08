@@ -6,31 +6,34 @@
     ></top-bar>
     <router-view />
     <login-modal
-      :isVisible="state.LoginModalVisible"
+      :isVisible="LoginModalVisible"
       @changeLoginModalVisible="changeLoginModalVisible"
       @changeModalMode="changeModalMode"
-      :mode="state.mode"
+      :mode="mode"
     ></login-modal>
     <library-container
-      :librarys="state.hotList"
+      :libraryImageVos="hotList"
       iconName="icon-hot"
       title="本周热门"
+      :key="1"
     ></library-container>
-    <library-container
-      :librarys="state.starList"
+    <!-- <library-container
+      :libraryImageVos="starList"
       iconName="icon-xihuan"
       title="点赞最多"
-    ></library-container>
+      :key="2"
+    ></library-container> -->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from "vue";
+import { defineComponent, onMounted, reactive, toRefs } from "vue";
 import TopBar from "@/components/home/TopBar.vue";
 import LoginModal from "@/components/home/LoginModal.vue";
 import LibraryContainer from "@/components/home/main/LibraryContainer.vue";
 import service from "@/utils/https";
 import urls from "@/utils/urls";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Home",
@@ -40,10 +43,10 @@ export default defineComponent({
     LibraryContainer,
   },
   setup() {
+    let store = useStore();
     const state = reactive({
       LoginModalVisible: false,
       mode: "login",
-      specificArray: ["hotList", "starList"],
       hotList: [],
       starList: [],
     });
@@ -58,17 +61,14 @@ export default defineComponent({
     };
     const getSpecificLibrary = async (): Promise<void> => {
       let data: any;
-      let formData = new FormData();
-      state.specificArray.forEach((specific: string) => {
-        formData.append("specificNameList", specific);
-      });
-      data = await service.post(urls.getSpecificLibrary, formData);
+      data = await service.get(
+        `${urls.getSpecificLibrary}/${store.getters.getUser.id}`
+      );
       state.hotList = data.hotList;
       state.starList = data.starList;
     };
     onMounted(getSpecificLibrary);
-
-    return { state, changeLoginModalVisible, changeModalMode };
+    return { ...toRefs(state), changeLoginModalVisible, changeModalMode };
   },
 });
 </script>

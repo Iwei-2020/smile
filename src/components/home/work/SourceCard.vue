@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import SvgIcon from "@/components/common/SvgIcon.vue";
-import { defineComponent, reactive, toRefs, watch } from "vue";
+import { defineComponent, nextTick, reactive, toRefs, watch } from "vue";
 import search from "@/assets/images/search.png";
 import LibraryModal from "./LibraryModal.vue";
 import {
